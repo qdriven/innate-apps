@@ -1,0 +1,102 @@
+{
+  "$schema": "./schema.json",
+  "version": 1,
+  "updated_at": "2026-11-01",
+  "collections": [
+    {
+      "name": "innate-daily",
+      "title": "Innate Daily",
+      "repo": "variableway/innate-daily",
+      "url": "https://github.com/variableway/innate-daily",
+      "local_path": "innate-daily",
+      "category": "app",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "Go",
+      "description": "personal github repo dashboard for building in public, always in working in process"
+    },
+    {
+      "name": "innate-fe-examples",
+      "title": "Innate FE Examples",
+      "repo": "qdriven/innate-fe-examples",
+      "url": "https://github.com/qdriven/innate-fe-examples",
+      "local_path": "innate-fe-examples",
+      "category": "app",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "TypeScript",
+      "description": "Frontend examples for quick development"
+    },
+    {
+      "name": "innate-vytdl",
+      "title": "Innate vYtDL",
+      "repo": "qdriven/innate-vytdl",
+      "url": "https://github.com/qdriven/innate-vytdl",
+      "local_path": "innate-vytdl",
+      "category": "app",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "Go",
+      "description": "vYtDL CLI — Go/TUI wrapper around yt-dlp with embed and auto-download"
+    },
+    {
+      "name": "innate-feeds",
+      "title": "Innate Feeds",
+      "repo": "variableway/innate-feeds",
+      "url": "https://github.com/variableway/innate-feeds",
+      "local_path": "innate-feeds",
+      "category": "app",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "TypeScript",
+      "description": "Github Trending and Starred Repo"
+    },
+    {
+      "name": "spark-cli",
+      "title": "Spark CLI",
+      "repo": "variableway/spark-cli",
+      "url": "https://github.com/variableway/spark-cli",
+      "local_path": "spark-cli",
+      "category": "app",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "Go",
+      "description": "Daily Cli command ideas fired by spark"
+    },
+    {
+      "name": "innate-fe",
+      "title": "Innate FE",
+      "repo": "variableway/innate-fe",
+      "url": "https://github.com/variableway/innate-fe",
+      "local_path": "../base/innate-fe",
+      "category": "base",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "TypeScript",
+      "description": "base frontend framework for innate apps"
+    },
+    {
+      "name": "innate-backend",
+      "title": "Innate Backend",
+      "repo": "variableway/innate-backend",
+      "url": "https://github.com/variableway/innate-backend",
+      "local_path": "../base/innate-backend",
+      "category": "base",
+      "status": "maintained",
+      "visibility": "public",
+      "language": "TypeScript",
+      "description": "base backend framework for innate apps"
+    },
+    {
+      "name": "innate-desktop",
+      "title": "Innate Desktop",
+      "repo": "qdriven/innate-susu",
+      "url": "https://github.com/qdriven/innate-susu",
+      "local_path": "../base/innate-desktop",
+      "category": "base",
+      "status": "maintained",
+      "visibility": "public",
+      "description": "base desktop app project for innate apps"
+    }
+  ]
+}

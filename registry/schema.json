@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Innate Apps Registry",
+  "type": "object",
+  "required": ["version", "collections"],
+  "properties": {
+    "version": { "type": "integer" },
+    "updated_at": { "type": "string", "format": "date" },
+    "collections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "repo", "category", "status", "visibility"],
+        "properties": {
+          "name": { "type": "string", "description": "directory/collection name" },
+          "title": { "type": "string" },
+          "repo": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+          "url": { "type": "string", "format": "uri" },
+          "local_path": { "type": "string", "description": "path relative to innate-apps main checkout" },
+          "category": { "enum": ["base", "app", "reference"] },
+          "status": { "enum": ["maintained", "archived", "experimental"] },
+          "visibility": { "enum": ["public", "private"] },
+          "language": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  }
+}
