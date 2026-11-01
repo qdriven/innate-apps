@@ -67,3 +67,10 @@ Base（维护中，public）：
 | innate-fe | variableway/innate-fe |
 | innate-backend | variableway/innate-backend |
 | innate-desktop | qdriven/innate-susu |
+
+## Task：dsh-superagent-prototype 使用调研 ✅ (issue#3)
+
+调研 [deepseek-ai/dsh-superagent-prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) 的使用方式及与 DSH 的结合。
+报告见 [`docs/research/dsh-superagent-usage.md`](../../research/dsh-superagent-usage.md)，上游 clone 在 `dsh-superagent-prototype/`（gitignore 排除）。
+要点：DSH bundle 四个结合点（profile/Cordis 插件/Agent Session API/子进程服务）；GitHub 官方构建路径；
+飞书为一等 Source；本地 GitLab 不支持、需按 docs/008-cookbook 自写 Source 或用飞书+私有 GitHub 镜像混合方案。
