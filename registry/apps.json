@@ -64,6 +64,18 @@
       "description": "Daily Cli command ideas fired by spark"
     },
     {
+      "name": "dsh-innate-agent",
+      "title": "DSH Innate Agent",
+      "repo": "local/dsh-innate-agent",
+      "url": "",
+      "local_path": "dsh-innate-agent",
+      "category": "app",
+      "status": "experimental",
+      "visibility": "local",
+      "language": "TypeScript",
+      "description": "Local experiment fork of deepseek-ai/dsh-superagent-prototype: GitHub-optional deployment plus a localboard Source for the full agent loop without GitHub"
+    },
+    {
       "name": "innate-fe",
       "title": "Innate FE",
       "repo": "variableway/innate-fe",
