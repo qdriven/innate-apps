@@ -41,8 +41,8 @@
 字段定义见 [`registry/schema.json`](../../registry/schema.json)，说明见 [`registry/README.md`](../../registry/README.md)。
 
 registry 同步刷新到：
-1. `qdriven/.github` profile
-2. `variableway/.github` profile
+1. `qdriven/qdriven`（用户 profile 仓库）
+2. `variableway/.github`（org profile 仓库）
 3. 本仓库 README（标注基础框架 vs 应用开发）
 
 docs 目录可以更新。开发时候 worktree 开发不需要复制启发项目，只需要查找信息的时候到 main

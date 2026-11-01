@@ -23,4 +23,4 @@
 
 1. 所有需要查找的内容都到 main 所在目录进行查找，相对目录都是从 main 所在目录出发。
 2. worktree 开发时不需要复制启发的项目，只读取 main 目录中的 registry 信息。
-3. registry 更新后同步刷新：本仓库 README、`qdriven/.github` 与 `variableway/.github` 的 profile。
+3. registry 更新后同步刷新：本仓库 README、用户 profile 仓库 `qdriven/qdriven` 与 org profile 仓库 `variableway/.github`。
