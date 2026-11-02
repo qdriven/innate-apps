@@ -13,14 +13,30 @@
 | 字段 | 说明 |
 |------|------|
 | `name` | 目录名 / collection 名 |
-| `repo` | `owner/repo` |
-| `local_path` | 相对于 innate-apps main 所在目录的相对路径 |
+| `repo` | `owner/repo`（必填，`owner/repo` 格式） |
+| `url` | 仓库地址（URI 格式） |
+| `local_path` | 相对于 innate-apps main 检出目录的相对路径；`null` 表示远程仓库存在但本地尚未检出 |
 | `category` | `base`（基础框架）/ `app`（应用开发）/ `reference`（参考项目） |
 | `status` | `maintained` / `archived` / `experimental` |
-| `visibility` | `public` / `private` |
+| `visibility` | `public` / `private`（以 GitHub 实际可见性为准） |
+| `language` | 主要语言 |
+| `description` | 一句话说明 |
+
+## 校验
+
+字段与本地路径由脚本自动校验，改完 registry 请执行：
+
+```bash
+node scripts/validate-registry.mjs
+```
+
+校验内容：顶层与条目必填字段、`category`/`status`/`visibility` 枚举值、`repo` 格式、`url` 合法性、
+`name`/`repo` 重复，以及每条 `local_path` 是否在磁盘上真实存在。加 `--verbose` 可打印逐条路径解析结果。
 
 ## 约定
 
 1. 所有需要查找的内容都到 main 所在目录进行查找，相对目录都是从 main 所在目录出发。
 2. worktree 开发时不需要复制启发的项目，只读取 main 目录中的 registry 信息。
 3. registry 更新后同步刷新：本仓库 README、用户 profile 仓库 `qdriven/qdriven` 与 org profile 仓库 `variableway/.github`。
+4. `visibility` 与 `status` 需与 GitHub 实际状态一致——仓库转为 private 或删除时必须同步更新。
+

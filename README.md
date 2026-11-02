@@ -2,6 +2,9 @@
 
 记录开发的项目聚合 index 目录。项目信息以 [registry](registry/README.md) 方式记录（不使用 git submodule），数据源为 [registry/apps.json](registry/apps.json)。
 
+本 README 是 registry 的人类可读视图，由 `registry/apps.json` 同步而来；改动项目信息请改数据源，再跑
+`node scripts/validate-registry.mjs` 校验字段与本地路径。
+
 ## 维护中的项目
 
 ### 应用开发（Apps）
@@ -13,25 +16,50 @@
 | innate-vytdl | [qdriven/innate-vytdl](https://github.com/qdriven/innate-vytdl) | vYtDL CLI — Go/TUI wrapper around yt-dlp | maintained | public |
 | innate-feeds | [variableway/innate-feeds](https://github.com/variableway/innate-feeds) | Github Trending and Starred Repo | maintained | public |
 | spark-cli | [variableway/spark-cli](https://github.com/variableway/spark-cli) | Daily Cli command ideas fired by spark | maintained | public |
+| innate-keepthem | [variableway/innate-keepthem](https://github.com/variableway/innate-keepthem) | keep different resources and to know more | maintained | public |
+| innate-executable | [variableway/innate-executable](https://github.com/variableway/innate-executable) | executable tutorials website and desktop version | maintained | public |
+| innate-wip | [variableway/innate-wip](https://github.com/variableway/innate-wip) | personal github repo dashboard for building in public | maintained | public |
+| deepseek-harness | [qdriven/deepseek-harness](https://github.com/qdriven/deepseek-harness) | DeepSeek Harness: Everything is a Plugin. | maintained | public |
 | dsh-innate-agent | [qdriven/dsh-innate-agent](https://github.com/qdriven/dsh-innate-agent) | 本地 superagent 实验：无 GitHub 的完整接单-执行-交付回路（localboard Source + demo UI） | experimental | public |
+| tutorials-maker | [qdriven/tutorials-maker](https://github.com/qdriven/tutorials-maker) | 教程生成工作台，含 agent-learning-workbench | maintained | public |
+| cn-textbook-downloader | [qdriven/cn-textbook-downloader](https://github.com/qdriven/cn-textbook-downloader) | Download China Textbook Repo books | maintained | public |
+| ChinaTextbook | [qdriven/ChinaTextbook](https://github.com/qdriven/ChinaTextbook) | 所有小初高、大学PDF教材 | maintained | public |
+| susu-edu-workspace | [qdriven/susu-edu-workspace](https://github.com/qdriven/susu-edu-workspace) | 单学生、本地优先的初中数学补学应用 | maintained | private |
+| MangoDisk | [harry0703/MangoDisk](https://github.com/harry0703/MangoDisk) | 跨平台磁盘清理与空间分析工具 | maintained | public |
+| fire-skills | [variableway/fire-skills](https://github.com/variableway/fire-skills) | Personal AI Agent Skills Collection | maintained | public |
+| skill-management | [qdriven/skill-management](https://github.com/qdriven/skill-management) | Skill 管理与分发工具 | maintained | public |
+| innate-workspace | [variableway/innate-workspace](https://github.com/variableway/innate-workspace) | base modules + 自托管 + fe-base（远程不可访问，仅本地保留） | archived | private |
+| innate-works | [variableway/innate-works](https://github.com/variableway/innate-works) | works 集合仓库，内含 innate-capture（远程不可访问，仅本地保留） | archived | private |
 
 ### 基础框架（Base）
 
-位于 `../base` 目录（相对 innate-apps main 所在目录）：
+位于 `../framework` 目录（相对 innate-apps main 所在目录）：
 
 | Project | Repo | 说明 | 状态 | 可见性 |
 |---------|------|------|------|--------|
-| innate-fe | [variableway/innate-fe](https://github.com/variableway/innate-fe) | 前端基础框架 | maintained | public |
-| innate-backend | [variableway/innate-backend](https://github.com/variableway/innate-backend) | 后端基础框架 | maintained | public |
-| innate-desktop | [qdriven/innate-susu](https://github.com/qdriven/innate-susu) | 桌面应用基础项目 | maintained | public |
+| innate-fe | [variableway/innate-fe](https://github.com/variableway/innate-fe) | 前端基础框架 | maintained | private |
+| innate-backend | [variableway/innate-backend](https://github.com/variableway/innate-backend) | 后端基础框架 | maintained | private |
+| innate-desktop | [qdriven/innate-desktop](https://github.com/qdriven/innate-desktop) | 桌面应用基础项目 | maintained | public |
+
+### 参考项目（Reference）
+
+| Project | Repo | 说明 | 状态 | 可见性 |
+|---------|------|------|------|--------|
+| orca | [qdriven/orca](https://github.com/qdriven/orca) | 并行 agent 舰队的 ADE | maintained | public |
+| AIHOT | [KKKKhazix/AIHOT](https://github.com/KKKKhazix/AIHOT) | 自己找热点、自己写日报的网站框架 | maintained | public |
+| khazix-skills | [KKKKhazix/khazix-skills](https://github.com/KKKKhazix/khazix-skills) | 数字生命卡兹克开源的 AI Skills 合集 | maintained | public |
+| ai-aug-edu | [HytidelLegend/ai-aug-edu](https://github.com/HytidelLegend/ai-aug-edu) | AI 增强教育项目参考实现 | maintained | public |
+| word-atlas | [designfuchen/word-atlas](https://github.com/designfuchen/word-atlas) | 词光 · Illustrated IELTS vocabulary | maintained | public |
 
 ## 目录结构
 
 - `registry/` — collections 注册信息（apps.json + schema.json）
 - `docs/` — 设计与调研文档
+- `scripts/validate-registry.mjs` — 校验 registry 字段与本地路径
 - 各 app 目录为独立 git 仓库（非 submodule）
 
 ## 约定
 
 - 所有需要查找的内容都到 main 所在目录进行查找，相对目录都是从 main 所在目录出发。
 - worktree 开发时不需要复制启发的项目，只读取 main 目录中的 registry 信息。
+- `local_path` 一律相对 innate-apps main 检出目录；`null` 表示远程存在但本地尚未检出。
