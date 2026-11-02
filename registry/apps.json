@@ -66,14 +66,14 @@
     {
       "name": "dsh-innate-agent",
       "title": "DSH Innate Agent",
-      "repo": "local/dsh-innate-agent",
-      "url": "",
+      "repo": "qdriven/dsh-innate-agent",
+      "url": "https://github.com/qdriven/dsh-innate-agent",
       "local_path": "dsh-innate-agent",
       "category": "app",
       "status": "experimental",
-      "visibility": "local",
+      "visibility": "public",
       "language": "TypeScript",
-      "description": "Local experiment fork of deepseek-ai/dsh-superagent-prototype: GitHub-optional deployment plus a localboard Source for the full agent loop without GitHub"
+      "description": "Local experiment fork of deepseek-ai/dsh-superagent-prototype: GitHub-optional deployment, localboard Source (hookq), tmux-free service, event trace, and a one-page demo UI — the full agent loop without GitHub"
     },
     {
       "name": "innate-fe",

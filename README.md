@@ -13,6 +13,7 @@
 | innate-vytdl | [qdriven/innate-vytdl](https://github.com/qdriven/innate-vytdl) | vYtDL CLI — Go/TUI wrapper around yt-dlp | maintained | public |
 | innate-feeds | [variableway/innate-feeds](https://github.com/variableway/innate-feeds) | Github Trending and Starred Repo | maintained | public |
 | spark-cli | [variableway/spark-cli](https://github.com/variableway/spark-cli) | Daily Cli command ideas fired by spark | maintained | public |
+| dsh-innate-agent | [qdriven/dsh-innate-agent](https://github.com/qdriven/dsh-innate-agent) | 本地 superagent 实验：无 GitHub 的完整接单-执行-交付回路（localboard Source + demo UI） | experimental | public |
 
 ### 基础框架（Base）
 
