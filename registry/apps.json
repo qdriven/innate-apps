@@ -88,30 +88,6 @@
       "description": "executable tutorials website and desktop version"
     },
     {
-      "name": "innate-workspace",
-      "title": "Innate Workspace",
-      "repo": "variableway/innate-workspace",
-      "url": "https://github.com/variableway/innate-workspace",
-      "local_path": "../apps/innate-workspace",
-      "category": "app",
-      "status": "archived",
-      "visibility": "private",
-      "language": "TypeScript",
-      "description": "工作区聚合项目：base modules + 自托管 + fe-base（远程仓库已不可访问，仅本地保留）"
-    },
-    {
-      "name": "innate-works",
-      "title": "Innate Works",
-      "repo": "variableway/innate-works",
-      "url": "https://github.com/variableway/innate-works",
-      "local_path": "../apps/innate-works-backup",
-      "category": "app",
-      "status": "archived",
-      "visibility": "private",
-      "language": "TypeScript",
-      "description": "works 集合仓库，内含 innate-capture 看板（远程仓库已不可访问，仅本地保留）"
-    },
-    {
       "name": "innate-wip",
       "title": "Innate WIP",
       "repo": "variableway/innate-wip",
@@ -122,18 +98,6 @@
       "visibility": "public",
       "language": "TypeScript",
       "description": "personal github repo dashboard for building in public, always in working in process"
-    },
-    {
-      "name": "deepseek-harness",
-      "title": "DeepSeek Harness",
-      "repo": "qdriven/deepseek-harness",
-      "url": "https://github.com/qdriven/deepseek-harness",
-      "local_path": "../refine-factory/agent-way/deepseek-harness",
-      "category": "app",
-      "status": "maintained",
-      "visibility": "public",
-      "language": "TypeScript",
-      "description": "DeepSeek Harness: Everything is a Plugin."
     },
     {
       "name": "dsh-innate-agent",
@@ -170,18 +134,6 @@
       "visibility": "public",
       "language": "Python",
       "description": "Download China Textbook Repo books"
-    },
-    {
-      "name": "ChinaTextbook",
-      "title": "China Textbook",
-      "repo": "qdriven/ChinaTextbook",
-      "url": "https://github.com/qdriven/ChinaTextbook",
-      "local_path": "../refine-factory/edu/ChinaTextbook",
-      "category": "app",
-      "status": "maintained",
-      "visibility": "public",
-      "language": "Markdown",
-      "description": "所有小初高、大学PDF教材。"
     },
     {
       "name": "susu-edu-workspace",
@@ -230,18 +182,6 @@
       "visibility": "public",
       "language": "HTML",
       "description": "Skill 管理与分发工具"
-    },
-    {
-      "name": "orca",
-      "title": "Orca",
-      "repo": "qdriven/orca",
-      "url": "https://github.com/qdriven/orca",
-      "local_path": "../references/agents/orca",
-      "category": "reference",
-      "status": "maintained",
-      "visibility": "public",
-      "language": "TypeScript",
-      "description": "Orca is the ADE for working with a fleet of parallel agents."
     },
     {
       "name": "AIHOT",
