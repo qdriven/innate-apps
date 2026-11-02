@@ -1,0 +1,4 @@
+# 调研用 upstream clone，不属于本仓库
+/dsh-superagent-prototype/
+# 实验项目：独立 git 仓库（fork upstream），不作为本仓库内容追踪
+/dsh-innate-agent/

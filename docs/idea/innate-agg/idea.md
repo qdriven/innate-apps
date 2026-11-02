@@ -67,3 +67,27 @@ Base（维护中，public）：
 | innate-fe | variableway/innate-fe |
 | innate-backend | variableway/innate-backend |
 | innate-desktop | qdriven/innate-susu |
+
+## Task：dsh-superagent-prototype 使用调研 ✅ (issue#3)
+
+调研 [deepseek-ai/dsh-superagent-prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) 的使用方式及与 DSH 的结合。
+报告见 [`docs/research/dsh-superagent-usage.md`](../../research/dsh-superagent-usage.md)，上游 clone 在 `dsh-superagent-prototype/`（gitignore 排除）。
+要点：DSH bundle 四个结合点（profile/Cordis 插件/Agent Session API/子进程服务）；GitHub 官方构建路径；
+飞书为一等 Source；本地 GitLab 不支持、需按 docs/008-cookbook 自写 Source 或用飞书+私有 GitHub 镜像混合方案。
+
+## Task：dsh-innate-agent 本地实验项目 🧪 (issue#3 延伸)
+
+按调研结论落地"无 GitHub 本地实验"：`dsh-innate-agent/` 为独立 git 仓库（fork upstream，remote `upstream`）。
+- **GitHub 可选化补丁**：GitHub Source 不配仓库/CLI 时 setup 解析为无 GitHub 的 deployment（gh shim、github.com 凭据都不写）
+- **localboard Source**（`src/sources/localboard.ts`）+ **hookq 本地看板 CLI**（`cli/hookq.mjs`，JSON 存储）：
+  按 docs/008-cookbook 配方实现完整 Trigger/Thread/Channel/Policy/执行环境
+- 上游测试全数保持通过（1204 passed）；实验手册见 `dsh-innate-agent/docs/experiment.md`
+- 已注册 registry（experimental / local）
+
+### 延伸：无 tmux 服务 + 事件 trace + Skill 管理调研 ✅
+
+- `scripts/dsh-superagent-local`：nohup 后台服务（复用上游 control/退出码约定），不依赖 tmux/终端窗口
+- 事件 trace：`src/app/trace.ts` 把 Engine 全部领域事件 + worker 的 todo 快照（`worker.todos`，即 todo_write 会话事件）与工具调用（`worker.tool`）记入有界日志；`cli/trace.mjs` 查看/过滤/跟随
+- Skill 管理调研：见 [`docs/research/dsh-skill-management.md`](../../research/dsh-skill-management.md)。
+  skill 发现/加载/多来源合并（ctx.skills + provider）与多 provider LLM（dsh-llm adapter）均已是 DSH 内置能力；
+  缺的是单 skill 粒度的 eval/安装/远程同步治理层，建议先做"远程同步 provider"（落 `~/.dsh/skills` 复用 filesystem provider）
