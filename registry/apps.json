@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": 1,
-  "updated_at": "2026-11-02",
+  "updated_at": "2026-11-03",
   "collections": [
     {
       "name": "innate-daily",
@@ -133,7 +133,7 @@
       "status": "maintained",
       "visibility": "public",
       "language": "Python",
-      "description": "Download China Textbook Repo books"
+      "description": "ChinaTextbook 教材批量下载 CLI/TUI（uv + typer + textual）：断点续传、SHA 校验、PDF 分块合并"
     },
     {
       "name": "susu-edu-workspace",
