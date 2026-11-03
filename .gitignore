@@ -2,3 +2,15 @@
 /dsh-superagent-prototype/
 # 实验项目：独立 git 仓库（fork upstream），不作为本仓库内容追踪
 /dsh-innate-agent/
+
+# scripts/ 下多为本地一次性脚本，默认不入库；
+# 仅白名单下列出的仓库级脚本（含每日签到自动化）纳入版本管理。
+!/scripts/
+/scripts/*
+!/scripts/validate-registry.mjs
+!/scripts/package.json
+!/scripts/daily-checkin.ts
+!/scripts/workbuddy-checkin.ts
+!/scripts/workbuddy-cdp.ts
+!/scripts/run-mcode-checkin.cmd
+!/scripts/run-workbuddy-checkin.cmd

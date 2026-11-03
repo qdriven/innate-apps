@@ -20,15 +20,15 @@
 
 ```powershell
 # mcode
-bun run 'D:\innate-workspace\refine-factory\scripts\daily-checkin.ts'
+bun run scripts/daily-checkin.ts
 
 # WorkBuddy
-bun run 'D:\innate-workspace\refine-factory\scripts\workbuddy-checkin.ts'
-bun run 'D:\innate-workspace\refine-factory\scripts\workbuddy-checkin.ts' --status   # 只查状态
+bun run scripts/workbuddy-checkin.ts
+bun run scripts/workbuddy-checkin.ts --status   # 只查状态
 ```
 
 计划任务入口是 `scripts/run-mcode-checkin.cmd` / `scripts/run-workbuddy-checkin.cmd`
-（里面负责定位 bun 可执行文件并设置环境变量）。
+（里面定位 bun 可执行文件并设置环境变量；脚本路径按 `%~dp0` 定位，可整仓迁移）。
 
 常用环境变量：
 
@@ -54,7 +54,7 @@ schtasks /delete /tn "WorkBuddy Daily Checkin" /f      # 删除
 重建：
 
 ```powershell
-$action = New-ScheduledTaskAction -Execute 'D:\innate-workspace\refine-factory\scripts\run-workbuddy-checkin.cmd' -WorkingDirectory 'D:\innate-workspace\refine-factory'
+$action = New-ScheduledTaskAction -Execute (Resolve-Path '.\scripts\run-workbuddy-checkin.cmd') -WorkingDirectory (Get-Location)
 $trigger = New-ScheduledTaskTrigger -Daily -At '09:05'
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew `
   -ExecutionTimeLimit (New-TimeSpan -Hours 10) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
@@ -112,7 +112,7 @@ const { region, path: pathname, query, method = 'GET', body, style, token } = op
             "type": "command",
             "name": "MiniMax 每日签到",
             "command": "bun run \"$HOME/innate-workspace/refine-factory/scripts/daily-checkin.ts\"",
-            "commandWindows": "C:\\Users\\anyda\\.bun\\bin\\bun.exe run D:\\innate-workspace\\refine-factory\\scripts\\daily-checkin.ts",
+            "commandWindows": "%USERPROFILE%\\.bun\\bin\\bun.exe run %USERPROFILE%\\innate-workspace\\refine-factory\\scripts\\daily-checkin.ts",
             "timeout": 10
           }
         ]
@@ -129,11 +129,15 @@ CDP 通道、调试端口策略与客户端自动更新的处理。
 
 ## 仓库约定
 
-- `scripts/` 在本仓库 `.git/info/exclude` 中被本地排除，脚本不进版本库；
+- `scripts/` 默认不入库（`.gitignore` 中 `/scripts/*`），
+  仅白名单下列出的仓库级脚本纳入版本管理：
+  `validate-registry.mjs`、`package.json`、`daily-checkin.ts`、`workbuddy-checkin.ts`、
+  `workbuddy-cdp.ts`、`run-mcode-checkin.cmd`、`run-workbuddy-checkin.cmd`；
   文档在 `docs/research/` 下会被跟踪。
 - 脚本与文档统一使用 CRLF 行尾。
-- Bun 版本：本机有两份（`C:\Users\anyda\.bun\bin\bun.exe` 1.3.6、
-  `C:\Users\anyda\.local\opt\node\node_modules\bun\bin\bun.exe` 1.4.3），
-  `.cmd` 入口优先用前者，不存在时回退到后者。
+- `.cmd` 入口不写死用户名与仓库路径：脚本路径用 `%~dp0`（脚本所在目录），
+  bun 依次从 `PATH`、`%USERPROFILE%\.bun\bin`、`%LOCALAPPDATA%\bun\bin`、
+  `%USERPROFILE%\.local\opt\node\node_modules\bun\bin` 中查找，
+  因此仓库整体迁移到别的机器也能直接用。
 - 敏感信息：脚本与文档都不落 token 明文，只记录长度 / 前缀等元信息；
   日志同理。唯一的常量是 mcode 客户端签名用的 `SIGN_SALT`（属于客户端公开常量，非用户凭据）。

@@ -1,0 +1,6 @@
+{
+  "name": "refine-factory-scripts",
+  "private": true,
+  "type": "module",
+  "description": "本地自动化脚本（Bun / Node 24 双兼容）。"
+}

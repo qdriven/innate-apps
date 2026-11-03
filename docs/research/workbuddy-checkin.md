@@ -72,12 +72,12 @@ CLI（`codebuddy`）侧签到接口（CLI 包内不存在签到 API）。
 用法：
 
 ```powershell
-# 手动签到
-bun run 'D:\innate-workspace\refine-factory\scripts\workbuddy-checkin.ts'
-# node 'D:\innate-workspace\refine-factory\scripts\workbuddy-checkin.ts'   # 同样可跑
+# 手动签到（在仓库根目录执行）
+bun run scripts/workbuddy-checkin.ts
+node scripts/workbuddy-checkin.ts   # 同样可跑
 
 # 只看状态 / 强制再调一次 / 打印原始返回
-bun run 'D:\innate-workspace\refine-factory\scripts\workbuddy-checkin.ts' --status
+bun run scripts/workbuddy-checkin.ts --status
 $env:WB_CHECKIN_FORCE='1'; $env:WB_CHECKIN_DEBUG='1'
 ```
 
@@ -94,8 +94,10 @@ $env:WB_CHECKIN_FORCE='1'; $env:WB_CHECKIN_DEBUG='1'
 
 - 名称：`WorkBuddy Daily Checkin`
 - 触发：每天 09:05（错过时间开机补跑）
-- 动作：`D:\innate-workspace\refine-factory\scripts\run-workbuddy-checkin.cmd`
-  （里面设置 `WB_CHECKIN_RESTART_RUNNING=1` 后调用 bun）
+- 动作：`scripts/run-workbuddy-checkin.cmd`
+  （脚本路径用 `%~dp0` 定位；里面设置 `WB_CHECKIN_RESTART_RUNNING=1` 后调用 bun，
+  bun 依次从 `PATH`、`%USERPROFILE%\.bun\bin`、`%LOCALAPPDATA%\bun\bin`、
+  `%USERPROFILE%\.local\opt\node\node_modules\bun\bin` 中查找）
 
 ```powershell
 schtasks /run /tn "WorkBuddy Daily Checkin"      # 手动触发
