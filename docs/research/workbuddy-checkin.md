@@ -1,7 +1,7 @@
 # WorkBuddy 每日签到：实现说明
 
 > 目标：每天自动领取 WorkBuddy（腾讯 Buddy 加油站）的每日积分奖励。
-> 适用：Windows + 官方客户端 WorkBuddy 5.8.3（`C:\Program Files\WorkBuddy\WorkBuddy.exe`）。
+> 适用：Windows + 官方客户端 WorkBuddy 5.9.3（`C:\Program Files\WorkBuddy\WorkBuddy.exe`）。
 > 运行时：Bun（`bun run scripts/workbuddy-checkin.ts`），Node 24+ 亦可直接跑同一份 `.ts`。
 > 触发：Windows 计划任务「WorkBuddy Daily Checkin」（每天 09:05），不再依赖 mcode hook。
 
@@ -50,13 +50,14 @@ CLI（`codebuddy`）侧签到接口（CLI 包内不存在签到 API）。
 
 ## 实现
 
-脚本：`scripts/workbuddy-checkin.ts`（Bun / Node 双兼容），配套调试工具 `scripts/workbuddy-cdp.mjs`，
+脚本：`scripts/workbuddy-checkin.ts`（Bun / Node 双兼容），配套调试工具 `scripts/workbuddy-cdp.ts`，
 计划任务入口 `scripts/run-workbuddy-checkin.cmd`。
 
 流程：
 
 1. 自愈式写入 `~/.workbuddy/app/app-config.json` 的 `startupForceAutoUpdate: false`（见下方「环境修复」）。
-2. 探测调试端口：期望端口 `WB_CDP_PORT`（默认 9222）→ 失败则读 Chromium 的 `DevToolsActivePort`。
+2. 探测调试端口：优先复用 `cdp-instance.json` 里上次记录的端口；否则随机挑一个空闲端口，
+   客户端未运行则以 `--remote-debugging-port` 启动，已在运行且带调试端口则直接复用。
 3. 客户端未运行 → 以 `--remote-debugging-port` 启动；已在运行且带调试端口 → 直接复用。
 4. 在页面目标里找到暴露 `window.wb` 的主窗口，必要时把窗口最小化（后台静默）。
 5. `wb.invoke('auth:getCheckinStatus')` 查状态 → 未签到则 `wb.invoke('auth:claimDailyCheckin')` → 再查一次确认。
@@ -132,7 +133,17 @@ schtasks /query /tn "WorkBuddy Daily Checkin" /v # 查看上次结果
 另外注意：**客户端提权自更新会吃掉启动参数**（此时进程命令行在非提权视角下不可见，
 调试端口也不会开）。这时换端口重启即可恢复，脚本已覆盖该场景。
 
-## 验证记录（2026-11-02）
+## 验证记录
+
+### 2026-11-03
+
+- 客户端冷启动（进程未运行）→ 脚本自启动客户端、开随机调试端口（63612）→ 连上主窗口 → 最小化 →
+  查状态 → 幂等跳过领取 → 写状态文件 → 关窗口留托盘进程，退出码 0。
+  实测输出：`[status] 今日已签到=true｜连胜 14 天｜今日积分 100/100｜活动「Buddy应用」第 10 季`。
+- 当日实际效果：连胜 13 → **14 天**，今日 100 积分到账（`today_checked_in=true, streak_days=14, today_credit=100`）。
+- 计划任务 `MiniMax Code Daily Checkin` / `WorkBuddy Daily Checkin` 手动触发后 `Last Result: 0`。
+
+### 2026-11-02
 
 - 客户端直连接口验证：
   - `auth:getCheckinStatus` → `today_checked_in=true, streak_days=13, daily_credit=100, today_credit=100,

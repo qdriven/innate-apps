@@ -72,6 +72,29 @@ Register-ScheduledTask -TaskName 'WorkBuddy Daily Checkin' -Action $action -Trig
 - 账号身份（`realUserID`）缓存 6 小时：`daily-checkin-identity.json`。
 - 调试开关：`MCODE_CHECKIN_FORCE` / `MCODE_CHECKIN_FORCE_REFRESH` / `MCODE_CHECKIN_DEBUG`。
 
+### 踩坑记录：`path` → `pathname` 解构 bug
+
+`.ts` 移植时，`signedRequest` 的选项解构误写成：
+
+```ts
+const { region, pathname, query, method = 'GET', body, style, token } = options;
+```
+
+而选项名其实是 `path`，`pathname` 恒为 `undefined`，导致请求打到 `undefined` 上：
+
+```
+GET undefined failed with HTTP 404
+```
+
+2026-11-03 10:26 的计划任务因此失败（`Last Result` 非 0）。修正为：
+
+```ts
+const { region, path: pathname, query, method = 'GET', body, style, token } = options;
+```
+
+修正后实测返回「第 4 天，今日已获得 1000 积分」，计划任务 `Last Result: 0`。
+教训：解构重命名写成 `path: pathname` 时，重命名目标必须与下游用法一致，不能想当然地按同名写。
+
 ### 已移除的 hook
 
 原先靠 mcode 用户级 hook 触发（`~/.minimax/hooks.json` 的 `SessionStart`），现已改为计划任务，
@@ -112,3 +135,5 @@ CDP 通道、调试端口策略与客户端自动更新的处理。
 - Bun 版本：本机有两份（`C:\Users\anyda\.bun\bin\bun.exe` 1.3.6、
   `C:\Users\anyda\.local\opt\node\node_modules\bun\bin\bun.exe` 1.4.3），
   `.cmd` 入口优先用前者，不存在时回退到后者。
+- 敏感信息：脚本与文档都不落 token 明文，只记录长度 / 前缀等元信息；
+  日志同理。唯一的常量是 mcode 客户端签名用的 `SIGN_SALT`（属于客户端公开常量，非用户凭据）。

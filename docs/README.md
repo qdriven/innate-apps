@@ -25,7 +25,26 @@
 | [use-cases/cli-multi-platform-downloads.zh.md](./use-cases/cli-multi-platform-downloads.zh.md) | 用例：vYtDL CLI 多平台下载（中文） |
 | [use-cases/cli-multi-platform-downloads.en.md](./use-cases/cli-multi-platform-downloads.en.md) | Use case: vYtDL CLI multi-platform downloads (English) |
 | [research/wechat-content-acquisition-repos.md](./research/wechat-content-acquisition-repos.md) | 调研：微信视频号 / 公众号内容获取 GitHub Top 10 与技术路线 |
+| [research/daily-checkin.md](./research/daily-checkin.md) | 每日签到自动化总览（mcode + WorkBuddy，Bun 脚本 + Windows 计划任务） |
+| [research/workbuddy-checkin.md](./research/workbuddy-checkin.md) | WorkBuddy 每日签到实现说明（接口逆向、CDP 通道、调试端口与自动更新处理） |
+| [research/workbuddy-research.md](./research/workbuddy-research.md) | 调研：腾讯 WorkBuddy 产品定位、能力模型与可借鉴点 |
 | [design/reach-hub/](./design/reach-hub/) | 设计：基于 Agent-Reach 的最新内容获取与分发中枢（Reach-Hub，2026-10） |
+
+## 脚本目录
+
+仓库根 `scripts/` 下的可执行脚本：
+
+| 脚本 | 说明 |
+|------|------|
+| `scripts/validate-registry.mjs` | 校验 `registry/apps.json` 字段与 `local_path` 是否符合本地布局 |
+| `scripts/daily-checkin.ts` | MiniMax Code（mcode）每日积分签到（Bun / Node 24 均可运行） |
+| `scripts/workbuddy-checkin.ts` | WorkBuddy（腾讯 Buddy 加油站）每日积分签到，驱动官方客户端走 IPC 领取 |
+| `scripts/workbuddy-cdp.ts` | WorkBuddy 客户端 CDP 调试工具，用于排查签到通道 |
+| `scripts/run-mcode-checkin.cmd` | 计划任务入口：定位 bun 可执行文件后调用 mcode 签到脚本 |
+| `scripts/run-workbuddy-checkin.cmd` | 计划任务入口：定位 bun 可执行文件后调用 WorkBuddy 签到脚本 |
+
+签到脚本的运行方式、环境变量与计划任务管理见
+[research/daily-checkin.md](./research/daily-checkin.md)。
 
 ## 快速开始（最短路径）
 
