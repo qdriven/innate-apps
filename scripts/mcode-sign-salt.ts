@@ -28,6 +28,7 @@ import { createInterface } from 'node:readline';
 import { resolveSignSalt, saltFromClient, SALT_NOT_FOUND_MESSAGE } from './mcode-sign-salt-lib.ts';
 
 const ENV_KEY = 'MCODE_SIGN_SALT';
+const ENV_KEY_PATH = 'HKCU\\Environment';
 
 function log(message: string): void {
   process.stdout.write(`${message}\n`);
@@ -38,20 +39,36 @@ function mask(salt: string): string {
   return `${salt.slice(0, 2)}…${salt.slice(-2)} (len=${salt.length})`;
 }
 
-/** 用 setx 写用户级环境变量（不经过 PowerShell，避免转义问题）。 */
+/**
+ * 写用户级环境变量。
+ *
+ * 注意：不能用 `setx`。setx 会把含 `%` 的值写成 REG_EXPAND_SZ，
+ * 而签名盐里恰好含有 `%W`、`%S`、`%1RlZJ` 等片段 ——
+ * 新进程读取时会被当作环境变量引用展开，导致取到空值或残缺值。
+ * 因此这里用 `reg add /t REG_SZ` 写入，确保按字面量存储。
+ */
 function writeUserEnv(value: string): void {
-  execFileSync('setx.exe', [ENV_KEY, value], { stdio: 'ignore' });
+  // 先清掉可能存在的旧记录（setx 写的 REG_EXPAND_SZ 也要覆盖掉）
+  clearUserEnv();
+  execFileSync('reg.exe', ['add', ENV_KEY_PATH, '/v', ENV_KEY, '/t', 'REG_SZ', '/d', value, '/f'], {
+    stdio: 'ignore',
+  });
 }
 
-/** 读用户级环境变量（setx 写的是 HKCU\Environment）。 */
+/**
+ * 读用户级环境变量。
+ * 同时兼容 REG_SZ 与 REG_EXPAND_SZ（旧版 setx 留下的记录）。
+ */
 function readUserEnv(): string | null {
   try {
     const out = execFileSync(
       'reg.exe',
-      ['query', 'HKCU\\Environment', '/v', ENV_KEY],
+      ['query', ENV_KEY_PATH, '/v', ENV_KEY],
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
     );
-    const m = out.match(/REG_SZ\s+(\S+)/);
+    const line = out.split(/\r?\n/).find((l) => l.includes(ENV_KEY));
+    if (!line) return null;
+    const m = line.match(/REG_(?:EXPAND_)?SZ\s+(\S+)/);
     return m ? m[1] : null;
   } catch {
     return null;
@@ -60,7 +77,7 @@ function readUserEnv(): string | null {
 
 function clearUserEnv(): void {
   try {
-    execFileSync('reg.exe', ['delete', 'HKCU\\Environment', '/v', ENV_KEY, '/f'], {
+    execFileSync('reg.exe', ['delete', ENV_KEY_PATH, '/v', ENV_KEY, '/f'], {
       stdio: 'ignore',
     });
   } catch {

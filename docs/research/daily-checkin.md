@@ -85,8 +85,15 @@ bun run scripts/mcode-sign-salt.ts clear      # 清除用户级环境变量
 bun run scripts/mcode-sign-salt.ts check      # 自检
 ```
 
-写入用户级环境变量用 `setx`（Windows 需新开进程/计划任务才会生效），
+写入用户级环境变量用 `reg add ... /t REG_SZ`（Windows 需新开进程/计划任务才会生效），
 清除用 `reg delete HKCU\Environment /v MCODE_SIGN_SALT /f`。
+
+> **不要用 `setx` 写这个变量。** 盐里含有 `%W`、`%S`、`%1RlZJ` 等片段，
+> 而 `setx` 会把含 `%` 的值存成 `REG_EXPAND_SZ`（可展开字符串），
+> 新进程读取时这些 `%...%` 会被当作环境变量引用展开，
+> 导致取到空值或残缺值、签到直接失败。
+> 必须用 `reg add /t REG_SZ` 按字面量存储。
+> 脚本里已按此实现，`readUserEnv` 也同时兼容两种类型。
 
 > 注意：客户端版本升级后若打包布局变化导致提取失败，
 > 用 `extract` 确认、或从新客户端产物里重新定位 `x-signature` 模板后 `set` 回去即可。
