@@ -34,6 +34,8 @@ bun run scripts/workbuddy-checkin.ts --status   # 只查状态
 
 | 变量 | 作用 |
 | --- | --- |
+| `MCODE_SIGN_SALT` | mcode：指定请求签名盐（最高优先级，见下方「签名盐怎么来的」） |
+| `MCODE_CLIENT_DIR` | mcode：指定 mcode 客户端安装目录（默认自动探测） |
 | `MCODE_CHECKIN_FORCE=1` | mcode：当天已签也强制再跑一次 |
 | `MCODE_CHECKIN_FORCE_REFRESH=1` | mcode：强制走 OAuth 刷新 token |
 | `MCODE_CHECKIN_DEBUG=1` | mcode：打印原始接口返回 |
@@ -42,6 +44,52 @@ bun run scripts/workbuddy-checkin.ts --status   # 只查状态
 | `WB_CHECKIN_DEBUG=1` | WorkBuddy：打印原始返回 |
 | `WB_CHECKIN_RESTART_RUNNING=1` | WorkBuddy：客户端在跑但没开调试端口时强制接管（计划任务已默认开启） |
 | `WB_CHECKIN_KEEP_APP=1` | WorkBuddy：签到后不隐藏客户端窗口 |
+
+## 签名盐怎么来的
+
+签到接口的 `x-signature` 头需要 mcode 客户端里的一个固定盐。
+它在客户端打包产物中是以**模板字符串字面量**出现的，形如：
+
+```js
+"x-signature":IE(`${o}<盐>`)
+```
+
+因此可以从本机已安装的客户端里稳定提取，**不需要手抄、也不必把常量写死在公开仓库里**。
+
+取值优先级（实现见 `scripts/mcode-sign-salt-lib.ts`）：
+
+1. **环境变量 `MCODE_SIGN_SALT`** —— 显式指定，最高优先级；
+2. **本机 mcode 客户端自动提取** —— 扫描客户端包里的 js，
+   用正则从 `x-signature` 模板中取 `${...}` 之后的固定前缀（去掉尾部插值）；
+   多个候选时取出现次数最多的那个；
+3. **都没有 → 直接报错** —— 仓库里**不内置任何盐值**，
+   错误信息会引导你运行 `bun run scripts/mcode-sign-salt.ts`。
+
+客户端探测目录（`MCODE_CLIENT_DIR` 可覆盖）：
+
+- `%USERPROFILE%\.local\opt\node\node_modules\@minimax-ai\code`
+- `%USERPROFILE%\AppData\Roaming\npm\node_modules\@minimax-ai\code`
+- `%USERPROFILE%\.npm-global\lib\node_modules\@minimax-ai\code`
+
+### 交互式配置
+
+`scripts/mcode-sign-salt.ts` 提供交互式入口，会依次尝试环境变量与客户端提取，
+并询问是否写入用户级环境变量（写入后计划任务等新进程可直接读取）：
+
+```powershell
+bun run scripts/mcode-sign-salt.ts            # 交互式（推荐）
+bun run scripts/mcode-sign-salt.ts show       # 只看当前来源与掩码后的盐
+bun run scripts/mcode-sign-salt.ts extract    # 从客户端提取并打印明文
+bun run scripts/mcode-sign-salt.ts set <salt> # 写入用户级环境变量 MCODE_SIGN_SALT
+bun run scripts/mcode-sign-salt.ts clear      # 清除用户级环境变量
+bun run scripts/mcode-sign-salt.ts check      # 自检
+```
+
+写入用户级环境变量用 `setx`（Windows 需新开进程/计划任务才会生效），
+清除用 `reg delete HKCU\Environment /v MCODE_SIGN_SALT /f`。
+
+> 注意：客户端版本升级后若打包布局变化导致提取失败，
+> 用 `extract` 确认、或从新客户端产物里重新定位 `x-signature` 模板后 `set` 回去即可。
 
 ## 计划任务管理
 
@@ -131,8 +179,9 @@ CDP 通道、调试端口策略与客户端自动更新的处理。
 
 - `scripts/` 默认不入库（`.gitignore` 中 `/scripts/*`），
   仅白名单下列出的仓库级脚本纳入版本管理：
-  `validate-registry.mjs`、`package.json`、`daily-checkin.ts`、`workbuddy-checkin.ts`、
-  `workbuddy-cdp.ts`、`run-mcode-checkin.cmd`、`run-workbuddy-checkin.cmd`；
+  `validate-registry.mjs`、`package.json`、`daily-checkin.ts`、`mcode-sign-salt.ts`、
+  `mcode-sign-salt-lib.ts`、`workbuddy-checkin.ts`、`workbuddy-cdp.ts`、
+  `run-mcode-checkin.cmd`、`run-workbuddy-checkin.cmd`；
   文档在 `docs/research/` 下会被跟踪。
 - 脚本与文档统一使用 CRLF 行尾。
 - `.cmd` 入口不写死用户名与仓库路径：脚本路径用 `%~dp0`（脚本所在目录），
@@ -140,4 +189,5 @@ CDP 通道、调试端口策略与客户端自动更新的处理。
   `%USERPROFILE%\.local\opt\node\node_modules\bun\bin` 中查找，
   因此仓库整体迁移到别的机器也能直接用。
 - 敏感信息：脚本与文档都不落 token 明文，只记录长度 / 前缀等元信息；
-  日志同理。唯一的常量是 mcode 客户端签名用的 `SIGN_SALT`（属于客户端公开常量，非用户凭据）。
+  日志同理。签名盐不在仓库里固化，改为环境变量优先 + 从本机客户端自动提取，
+  详见上方「签名盐怎么来的」。

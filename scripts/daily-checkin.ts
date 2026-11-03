@@ -26,12 +26,18 @@ import { createHash } from 'node:crypto';
 import { appendFile, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
+import { resolveSignSalt } from './mcode-sign-salt-lib.ts';
 
 const APP_VERSION = '0.7.4';
 const CLIENT_ID = 'mcode-public';
 const SCOPE = 'agent.default';
 const AUDIENCE = 'agent-backend';
-const SIGN_SALT = 'I*7Cf%WZ#S&%1RlZJ&C2';
+
+/**
+ * 签名盐：优先取环境变量 MCODE_SIGN_SALT，其次从本机 mcode 客户端自动提取，
+ * 最后才用兜底默认值。详见 mcode-sign-salt.ts。
+ */
+const SIGN_SALT = resolveSignSalt().salt;
 
 const ORIGIN: Record<string, string> = {
   cn: 'https://agent.minimaxi.com',

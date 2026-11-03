@@ -38,6 +38,8 @@
 |------|------|
 | `scripts/validate-registry.mjs` | 校验 `registry/apps.json` 字段与 `local_path` 是否符合本地布局 |
 | `scripts/daily-checkin.ts` | MiniMax Code（mcode）每日积分签到（Bun / Node 24 均可运行） |
+| `scripts/mcode-sign-salt.ts` | mcode 签名盐交互式配置工具：探测客户端提取 / 写入环境变量 |
+| `scripts/mcode-sign-salt-lib.ts` | 签名盐解析库（环境变量 > 客户端自动提取 > 兜底默认值） |
 | `scripts/workbuddy-checkin.ts` | WorkBuddy（腾讯 Buddy 加油站）每日积分签到，驱动官方客户端走 IPC 领取 |
 | `scripts/workbuddy-cdp.ts` | WorkBuddy 客户端 CDP 调试工具，用于排查签到通道 |
 | `scripts/run-mcode-checkin.cmd` | 计划任务入口：定位 bun 可执行文件后调用 mcode 签到脚本 |
