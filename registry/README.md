@@ -50,4 +50,7 @@ node scripts/validate-registry.mjs
 2. worktree 开发时不需要复制启发的项目，只读取 main 目录中的 registry 信息。
 3. registry 更新后同步刷新：本仓库 README、用户 profile 仓库 `qdriven/qdriven` 与 org profile 仓库 `variableway/.github`。
 4. `visibility` 与 `status` 需与 GitHub 实际状态一致——仓库转为 private、删除或停止维护时必须同步更新。
+5. **内容型目录入库，独立仓库型 checkout 忽略**：`skills/` 与 `references/` 下的目录默认忽略；
+   只有手写内容（skill 目录、文档等）才纳入版本管理，并在 `.gitignore` 白名单里显式列出。
+   独立 git 仓库的 checkout 只作为本地依赖，不入库、不做 submodule。
 

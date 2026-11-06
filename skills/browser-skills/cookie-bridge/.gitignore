@@ -1,0 +1,3 @@
+# 本目录下绝不允许出现 cookie 产物
+cookies-*.json
+*.cookies.json

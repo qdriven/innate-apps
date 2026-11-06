@@ -27,16 +27,16 @@
 /spark-cli/
 /try-catch/
 
-# skills/ 与 references/ 下的独立 git 仓库（普通目录仍可正常追踪）
-/skills/devops-skill/
-/skills/figures-skill/
-/skills/fin-skills/
-/skills/fire-skills/
-/skills/presentation-skills/
-/skills/wip-skills/
-/references/agent-reach/
-/references/mygo/
-/references/tech-info-crawler/
+# skills/ 下默认忽略：独立 git 仓库的 checkout 不纳入本仓库内容追踪
+# （不做 submodule，只当本地依赖）。内容型 skill 目录（手写的 SKILL.md 等）
+# 需要入库时，在下方白名单里显式列出。
+/skills/*/
+!/skills/anti-hallucination-gates/
+!/skills/browser-skills/
+!/skills/docs/
+
+# references/ 下默认忽略：独立 git 仓库 checkout 与网页抓取快照都不入库
+/references/*/
 
 # macOS
 .DS_Store
