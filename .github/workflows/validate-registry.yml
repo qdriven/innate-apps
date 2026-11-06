@@ -40,3 +40,7 @@ jobs:
       # 否则说明文档已经和数据源脱节。
       - name: 工作区布局文档一致性校验
         run: node scripts/check-layout-doc.mjs
+
+      # 渲染器测试：profile 段落的生成规则不能悄悄改坏。
+      - name: 渲染器测试
+        run: node --test scripts/render-profile.test.mjs
