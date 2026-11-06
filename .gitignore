@@ -16,3 +16,27 @@
 !/scripts/workbuddy-cdp.ts
 !/scripts/run-mcode-checkin.cmd
 !/scripts/run-workbuddy-checkin.cmd
+
+# 各 app 与工具项目：独立 git 仓库（registry/README.md 约定，非 submodule），
+# 仅作为本地 checkout，不作为本仓库内容追踪
+/innate-daily/
+/innate-fe-examples/
+/innate-feeds/
+/innate-skills/
+/innate-vytdl/
+/spark-cli/
+/try-catch/
+
+# skills/ 与 references/ 下的独立 git 仓库（普通目录仍可正常追踪）
+/skills/devops-skill/
+/skills/figures-skill/
+/skills/fin-skills/
+/skills/fire-skills/
+/skills/presentation-skills/
+/skills/wip-skills/
+/references/agent-reach/
+/references/mygo/
+/references/tech-info-crawler/
+
+# macOS
+.DS_Store
