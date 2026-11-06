@@ -1,0 +1,37 @@
+name: Validate Registry
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-registry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: 校验 registry 字段与仓库真实状态
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # 字段校验：schema 必填字段、枚举值、repo 格式、url 合法性、name/repo 重复。
+      # 不依赖本地工作区，任何环境都能跑。
+      - name: 字段校验
+        run: node scripts/validate-registry.mjs --skip-paths
+
+      # 远程校验：核对 repo 在 GitHub 上的真实状态——存在性、是否被改名、可见性、
+      # 是否已归档、是否为 fork。local_path 校验在这里跳过（依赖本地 checkout 布局）。
+      - name: GitHub 远程状态校验
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/validate-registry.mjs --skip-paths --check-remote

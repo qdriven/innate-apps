@@ -44,6 +44,29 @@ node scripts/validate-registry.mjs
 校验内容：顶层与条目必填字段、`category`/`status`/`visibility` 枚举值、`repo` 格式、`url` 合法性、
 `name`/`repo` 重复，以及每条 `local_path` 是否在磁盘上真实存在。加 `--verbose` 可打印逐条路径解析结果。
 
+### CI 里的校验
+
+push 与 PR 时由 [`.github/workflows/validate-registry.yml`](../../.github/workflows/validate-registry.yml)
+自动执行，分两步：
+
+| 步骤 | 命令 | 校验内容 |
+|------|------|----------|
+| 字段校验 | `node scripts/validate-registry.mjs --skip-paths` | 只查 schema 与格式，不依赖本地工作区 |
+| 远程状态校验 | `node scripts/validate-registry.mjs --skip-paths --check-remote` | repo 是否存在、是否被改名、可见性、是否已归档、是否为 fork |
+
+**`--skip-paths`** 跳过 `local_path` 的磁盘存在性校验。那项校验依赖本机的工作区布局
+（见下文「工作区布局」），CI runner 上没有那些 checkout，不跳过会 21 条全部报「不存在」。
+
+**`--check-remote`** 调用 GitHub API 核对每条 `repo` 的真实状态：
+
+- 仓库已改名 → 报错，并给出 GitHub 上的新名字（API 会把旧路径重定向到新路径）
+- `visibility` 与 registry 不一致 → 报错
+- 仓库已归档但 `status` 仍是 `maintained` → 报错；是 fork → 报错
+- 最后一次 push 不在当前年份 → 警告（收录标准第 2 条）
+- 私有仓库在其他组织下时，令牌无权访问会返回 404；脚本先用探针（`github/gitignore`）
+  确认当前凭据能否读到安装范围外的公开仓库：能读到，404 才判定为「仓库不存在」；
+  读不到则降级为警告，不会误判成「不存在」
+
 ## 约定
 
 1. 所有需要查找的内容都到 main 所在目录进行查找，相对目录都是从 main 所在目录出发。
