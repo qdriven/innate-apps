@@ -35,3 +35,6 @@ PR 共 65 个文件、+5498 / -585。仓库的 `close-issue-on-merge` 工作流�
 - 分支 `30-update-docs` 通过 SSH over 443 推送（本机直连 github.com:443 会 HTTP2 framing 报错）
 - 合并前自检：`go build` / `go vet` 无告警、`go test ./...` 18 个有测试的包全过、`pnpm build` 产出 80 页
 - 自写校验脚本核对导航项解析、站内相对链接、zh/en 文件集与结构对齐，全部通过
+- 2026-11-06 15:11 合并 PR #31（merge commit `54bfe0e5`，沿用仓库既有的 merge commit 惯例）
+- 15:11:43 `close-issue-on-merge` 自动关闭 issue #30（reason=COMPLETED）
+- `docs.yml` 的 build job 成功（80 页），deploy job 发布到 GitHub Pages

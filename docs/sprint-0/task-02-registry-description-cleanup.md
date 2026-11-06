@@ -5,7 +5,7 @@
 | 状态 | ✅ 已完成（2026-11-06） |
 | 优先级 | P0 |
 | 目标仓库 | [qdriven/innate-apps](https://github.com/qdriven/innate-apps)（数据源所在） |
-| 关联 issue | [#10](https://github.com/qdriven/innate-apps/issues/10) |
+| 关联 issue | [#6](https://github.com/qdriven/innate-apps/issues/6) |
 | 波及仓库 | qdriven/qdriven（profile 渲染产物） |
 
 ## 目标
@@ -45,6 +45,14 @@
 
 ## 执行记录
 
-- 先开 issue #10 记录背景与验收标准，再动数据源
-- 改 `registry/apps.json` + `README.md` → 提交 `fix(registry): 移除已改名的 innate-wip 条目` 同一批次处理
-- 重新生成 `qdriven/qdriven` 的 profile 段落并推送
+1. 开 issue [#6](https://github.com/qdriven/innate-apps/issues/6) 记录背景与验收标准，再动数据源
+2. 改 `registry/apps.json`：`innate-vytdl.description` 去掉括号注释，
+   `updated_at` 刷新为 `2026-11-06`；**diff 仅一行**，其余 20 条 description 未动
+3. `innate-apps` README 对应行本来就没有这段注释（中文描述是人工撰写的），
+   确认无需同步
+4. 重新生成 `qdriven/qdriven` profile 的 `innate_apps` 段落并推送，确认无注释残留
+5. 提交 `215ddab`（`fix(registry): 清理 innate-vytdl description 中的本地态注释`）
+
+> 顺带说明：上一批提交里移除 `innate-wip` 条目（仓库已改名为 `innate-daily`）与本任务
+> 是同一类问题——registry 条目与 GitHub 实际状态脱节。那个条目当时没有本地态注释，
+> 但同样属于「数据源与线上不一致」，已在 `52e5d18` 处理。

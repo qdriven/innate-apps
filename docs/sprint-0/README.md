@@ -8,7 +8,7 @@
 | # | 任务 | 目标仓库（issue 所在） | 优先级 | 状态 | Issue |
 |---|------|----------------------|--------|------|-------|
 | 01 | 合并 spark-cli PR #31，验证文档站重建与 issue 自动关闭 | variableway/spark-cli | P0 | ✅ 已完成 | [#30](https://github.com/variableway/spark-cli/issues/30) |
-| 02 | 清理 innate-vytdl description 中的本地态注释 | qdriven/innate-apps | P0 | ✅ 已完成 | [#10](https://github.com/qdriven/innate-apps/issues/10) |
+| 02 | 清理 innate-vytdl description 中的本地态注释 | qdriven/innate-apps | P0 | ✅ 已完成 | [#6](https://github.com/qdriven/innate-apps/issues/6) |
 | 03 | 未跟踪内容定去留：skills/ 入库、repos3.txt 归档、镜像产物忽略 | qdriven/innate-apps | P1 | 🔲 待办 | — |
 | 04 | qdriven/qdriven profile 段落改由 registry 自动渲染 | qdriven/innate-apps | P2 | 🔲 待办 | — |
 | 05 | innate-apps 接入 CI：validate-registry + `--skip-paths` | qdriven/innate-apps | P2 | 🔲 待办 | — |
