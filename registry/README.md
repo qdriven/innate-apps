@@ -15,12 +15,89 @@
 | `name` | 目录名 / collection 名 |
 | `repo` | `owner/repo`（必填，`owner/repo` 格式） |
 | `url` | 仓库地址（URI 格式） |
-| `local_path` | 相对于 innate-apps main 检出目录的相对路径；`null` 表示远程仓库存在但本地尚未检出 |
+| `local_path` | 相对于 innate-apps main 检出目录的相对路径；`null` 表示远程仓库存在但本地尚未检出。详见[工作区布局](#工作区布局) |
 | `category` | `base`（基础框架）/ `app`（应用开发）/ `reference`（参考项目） |
 | `status` | `maintained` / `archived` / `experimental` |
 | `visibility` | `public` / `private`（以 GitHub 实际可见性为准） |
 | `language` | 主要语言 |
 | `description` | 一句话说明 |
+
+## 工作区布局
+
+`local_path` 是**相对于 innate-apps 检出目录**的相对路径——也就是从本仓库所在目录往上找。
+所有项目 checkout 都待在 innate-apps 的**同级**目录里，按用途分在几个桶下：
+
+```
+<workspace>/                     ← 工作区根，innate-apps 与所有项目 checkout 的父目录
+├── innate-apps/                 ← 本仓库，registry 数据源所在
+├── apps/                        ← 应用项目
+│   ├── daily-work/              → variableway/innate-daily
+│   ├── innate-fe-examples/      → qdriven/innate-fe-examples
+│   ├── innate-feeds/            → variableway/innate-feeds
+│   ├── innate-keepthem/         → variableway/innate-keepthem
+│   └── innate-executable/       → variableway/innate-executable
+├── tools/                       ← 工具
+│   └── spark-cli/               → variableway/spark-cli
+├── framework/                   ← 基础框架
+│   ├── innate-fe/               → variableway/innate-fe            (private)
+│   ├── innate-backend/          → variableway/innate-backend       (private)
+│   └── innate-ds/               → qdriven/innate-desktop
+├── refine-factory/              ← 实验与衍生项目
+│   ├── agent-way/
+│   │   └── dsh-innate-agent/    → qdriven/dsh-innate-agent
+│   ├── edu/
+│   │   └── cn-textbook-downloader/ → qdriven/cn-textbook-downloader
+│   ├── susu-edu-workspace/      → qdriven/susu-edu-workspace       (private)
+│   ├── os-tools/
+│   │   └── MangoDisk/           → harry0703/MangoDisk
+│   └── skills/
+│       ├── fire-skills/         → variableway/fire-skills
+│       └── innate-skills/       → qdriven/skill-management
+├── build-it-own/                ← 独立作品
+│   └── tutorials-maker/         → qdriven/tutorials-maker
+└── references/                  ← 外部参考项目（上游等）
+    ├── skills-hub/
+    │   ├── AIHOT/               → KKKKhazix/AIHOT
+    │   └── khazix-skills/       → KKKKhazix/khazix-skills
+    └── edu/
+        ├── ai-aug-edu/          → HytidelLegend/ai-aug-edu
+        └── word-atlas/          → designfuchen/word-atlas
+```
+
+### local_path 的两种取值
+
+| 取值 | 含义 | 路径校验如何处理 |
+|------|------|------------------|
+| `"../apps/daily-work"` | 该项目**已在本地检出**，路径相对 innate-apps 检出目录 | 检查它在磁盘上是否存在 |
+| `null` | 远程仓库存在，但**本地尚未检出**，没有对应 checkout 目录 | 跳过该项，属于正常情况，不是漏项 |
+
+`local_path` 描述的是**规范布局**里的位置。机器上还可能残留旧平铺布局的 checkout
+（直接躺在 innate-apps 内部，如 `innate-daily/`、`spark-cli/`），那类目录不受 registry
+跟踪，也不对应任何 `local_path` 条目。
+
+### 路径校验与环境差异
+
+路径存在性校验**依赖本机布局**，因此：
+
+- 在符合上述布局的机器上，`node scripts/validate-registry.mjs` 的 20 条路径应全部存在，
+  另 1 条为 `null` 走跳过
+- 在仍是旧平铺布局的机器上，路径会**几乎全部报「不存在」**——这是**环境差异，不是数据错误**
+- **不要为了让校验变绿去改 `local_path`**：那会把「本机布局不对」伪装成「registry 数据不对」，
+  下次换台机器或调整布局时反而更难查
+- CI runner 上没有这些 checkout，一律用 `--skip-paths` 跳过路径校验（见[校验](#校验)）
+
+### 仓库改名 / 下架时的处理
+
+| 情况 | 处理 |
+|------|------|
+| GitHub 上被改名 | `repo` 改成新的 `owner/name`，`url` 同步更新；目录名若随之改变，`local_path` 一并改 |
+| 仓库被删除 | 移除该条目 |
+| 仓库转为 private | `visibility` 改为 `private`；该条目**不得再出现在公开 profile** |
+| 停止维护但仍在 | `status` 改为 `archived`；GitHub 上勾了 archive 就同步改 |
+
+改名是最容易漏的一种：GitHub 会把旧路径重定向到新路径，页面照常打开、链接也不报错，
+只有 registry 里的 `repo` 字段是旧的。CI 的远程校验会拿 GitHub 返回的 `full_name`
+与 `repo` 比对，不一致直接报错并给出新名字（见[校验](#校验)）。
 
 ## 收录标准
 
@@ -53,6 +130,7 @@ push 与 PR 时由 [`.github/workflows/validate-registry.yml`](../../.github/wor
 |------|------|----------|
 | 字段校验 | `node scripts/validate-registry.mjs --skip-paths` | 只查 schema 与格式，不依赖本地工作区 |
 | 远程状态校验 | `node scripts/validate-registry.mjs --skip-paths --check-remote` | repo 是否存在、是否被改名、可见性、是否已归档、是否为 fork |
+| 布局文档一致性 | `node scripts/check-layout-doc.mjs` | 本文[工作区布局](#工作区布局)的布局树与 `apps.json` 逐条对得上 |
 
 **`--skip-paths`** 跳过 `local_path` 的磁盘存在性校验。那项校验依赖本机的工作区布局
 （见下文「工作区布局」），CI runner 上没有那些 checkout，不跳过会 21 条全部报「不存在」。

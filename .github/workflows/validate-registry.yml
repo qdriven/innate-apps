@@ -35,3 +35,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/validate-registry.mjs --skip-paths --check-remote
+
+      # 文档一致性：registry/README.md 里的「工作区布局」树必须与 apps.json 逐条对得上，
+      # 否则说明文档已经和数据源脱节。
+      - name: 工作区布局文档一致性校验
+        run: node scripts/check-layout-doc.mjs

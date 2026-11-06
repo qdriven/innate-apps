@@ -8,6 +8,7 @@
 !/scripts/
 /scripts/*
 !/scripts/validate-registry.mjs
+!/scripts/check-layout-doc.mjs
 !/scripts/package.json
 !/scripts/daily-checkin.ts
 !/scripts/mcode-sign-salt.ts
