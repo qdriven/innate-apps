@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": 1,
-  "updated_at": "2026-11-03",
+  "updated_at": "2026-11-06",
   "collections": [
     {
       "name": "innate-daily",
@@ -86,18 +86,6 @@
       "visibility": "public",
       "language": "TypeScript",
       "description": "executable tutorials website and desktop version"
-    },
-    {
-      "name": "innate-wip",
-      "title": "Innate WIP",
-      "repo": "variableway/innate-wip",
-      "url": "https://github.com/variableway/innate-wip",
-      "local_path": "../apps/agent-way/innate-wip",
-      "category": "app",
-      "status": "maintained",
-      "visibility": "public",
-      "language": "TypeScript",
-      "description": "personal github repo dashboard for building in public, always in working in process"
     },
     {
       "name": "dsh-innate-agent",

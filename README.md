@@ -18,7 +18,6 @@
 | spark-cli | [variableway/spark-cli](https://github.com/variableway/spark-cli) | Daily Cli command ideas fired by spark | maintained | public |
 | innate-keepthem | [variableway/innate-keepthem](https://github.com/variableway/innate-keepthem) | keep different resources and to know more | maintained | public |
 | innate-executable | [variableway/innate-executable](https://github.com/variableway/innate-executable) | executable tutorials website and desktop version | maintained | public |
-| innate-wip | [variableway/innate-wip](https://github.com/variableway/innate-wip) | personal github repo dashboard for building in public | maintained | public |
 | dsh-innate-agent | [qdriven/dsh-innate-agent](https://github.com/qdriven/dsh-innate-agent) | 本地 superagent 实验：无 GitHub 的完整接单-执行-交付回路（localboard Source + demo UI） | experimental | public |
 | tutorials-maker | [qdriven/tutorials-maker](https://github.com/qdriven/tutorials-maker) | 教程生成工作台，含 agent-learning-workbench | maintained | public |
 | cn-textbook-downloader | [qdriven/cn-textbook-downloader](https://github.com/qdriven/cn-textbook-downloader) | Download China Textbook Repo books | maintained | public |
