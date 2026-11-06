@@ -31,6 +31,7 @@
 | [design/reach-hub/](./design/reach-hub/) | 设计：基于 Agent-Reach 的最新内容获取与分发中枢（Reach-Hub，2026-10） |
 | [design/innate-dev-factory.md](./design/innate-dev-factory.md) | 设计：轻量级个人开发工厂——DSH 桌面底座选型与两模块设计（2026-11） |
 | [design/dsh-ui-seat-map.md](./design/dsh-ui-seat-map.md) | 参考：DSH Web UI 可替换座位全景图（103 座位清单 + 示意图 + 改造实战，2026-11） |
+| [sprint-0/](./sprint-0/) | Sprint 0：跨仓库维护任务索引与任务清单（2026-11 起） |
 
 ## 脚本目录
 
