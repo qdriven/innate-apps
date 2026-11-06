@@ -36,7 +36,7 @@
 
 - 本质：`dsh-plugin-desktop@2.0.13` 是一个**普通 Cordis 插件**（7 个 entries：shell/terminal/diagnostics/notifications/pnpm/profiles/updates），Electron main 进程 boot 官方 DSH Host，Web UI 走 loopback webServer，renderer 是纯浏览器环境（contextIsolation + sandbox，**无第二条 IPC 插件系统**）。
 - 第三方可扩展面（实测确认，这正是「轻应用进桌面」的地基）：
-  - **UI 面板**：插件在 package.json 声明 `dsh.client`（`platform: "web"` + `./client` 导出）→ 经 `/plugins` combo 路由分发 → 浏览器端 `ctx.slots.inject("main", ...)` 注册**整页面板**、`sidebar.panellist` 注册**侧边栏图标行**；`shell.overlay`（全屏浮层）、`shell.bottom`（底部条）、`sidebar.footer.action` 均为 additive 座位；`dsh-client-hmr` 支持运行中实时增删 UI。证据：`@deepseek-ai/dsh-client-modules/README.md`、`dsh-client-ui-layout/lib/types/client/index.d.ts:33-116`、`dsh-plugin-desktop/README.md` L165。
+  - **UI 面板**：插件在 package.json 声明 `dsh.client`（`platform: "web"` + `./client` 导出）→ 经 `/plugins` combo 路由分发 → 浏览器端 `ctx.slots.inject("main", ...)` 注册**整页面板**、`sidebar.panellist` 注册**侧边栏图标行**；`shell.overlay`（全屏浮层）、`shell.bottom`（底部条）、`sidebar.footer.action` 均为 additive 座位；`dsh-client-hmr` 支持运行中实时增删 UI。证据：`@deepseek-ai/dsh-client-modules/README.md`、`dsh-client-ui-layout/lib/types/client/index.d.ts:33-116`、`dsh-plugin-desktop/README.md` L165。（**全部 103 个 UI 座位的完整清单、布局示意图与改侧栏/接右栏实战见 [dsh-ui-seat-map.md](./dsh-ui-seat-map.md)**）
   - **自定义 HTTP/WS 路由**：`ctx.webServer.register({kind:'exact'|'prefix', path, handler})` 完整拥有响应生命周期（可伺服静态文件、长持 SSE），`registerUpgrade` WebSocket，`tapIndex`/`index-inject` 注入 index.html。证据：`@deepseek-ai/dsh-host-webserver/lib/types/index.d.ts`。
   - **桌面专属服务**：仅 `ctx.desktopProfiles`（profile 切换）与 `ctx.desktopPnpm`（进程执行）两个 Host service 对第三方开放；窗口/托盘/通知/更新等 Electron 能力**私有不可触达**（`dsh-plugin-desktop/docs/plugin-services.md`）。
 - 代价：Electron 重量（对比 Tauri）；UI 深度定制受官方 Web UI 约束（不能加 titlebar/命令栏按钮）；上游 0.2.x rc churn。
@@ -204,6 +204,7 @@ source:
 
 **B · Panel Host（面板宿主）**
 - 每个已安装且启用 panel 形态的应用：`ctx.slots.inject("main")` 注册一个 keyed 面板（内部 iframe 指向 `/apps/<id>/index.html`，同源免 trust 问题）+ `sidebar.panellist` 注册图标行。
+- 另两种宿主位形：右侧 dock tab（`ctx.sidebarRightTabs.register` + `sidebar.right.pane.tab` 键座位）与浮动窗（`ctx.sidebarRight.float`）——同一 app 源零改动切换，机制见 [dsh-ui-seat-map.md](./dsh-ui-seat-map.md) §8。
 - HMR 意味着安装/卸载应用**无需重启**（dsh-client-hmr 的 live plugin composition 同样适用于本插件注册的面板集合变更）。
 - 面板容器提供宿主桥（postMessage ↔ `/api/innate/apps/<id>/rpc`），首版只开放三个能力：读文件、发系统通知（走官方 notifications）、跳转面板——刻意最小，避免重造 permission 体系。
 

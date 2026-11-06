@@ -29,6 +29,8 @@
 | [research/workbuddy-checkin.md](./research/workbuddy-checkin.md) | WorkBuddy 每日签到实现说明（接口逆向、CDP 通道、调试端口与自动更新处理） |
 | [research/workbuddy-research.md](./research/workbuddy-research.md) | 调研：腾讯 WorkBuddy 产品定位、能力模型与可借鉴点 |
 | [design/reach-hub/](./design/reach-hub/) | 设计：基于 Agent-Reach 的最新内容获取与分发中枢（Reach-Hub，2026-10） |
+| [design/innate-dev-factory.md](./design/innate-dev-factory.md) | 设计：轻量级个人开发工厂——DSH 桌面底座选型与两模块设计（2026-11） |
+| [design/dsh-ui-seat-map.md](./design/dsh-ui-seat-map.md) | 参考：DSH Web UI 可替换座位全景图（103 座位清单 + 示意图 + 改造实战，2026-11） |
 
 ## 脚本目录
 
