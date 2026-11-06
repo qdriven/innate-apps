@@ -37,7 +37,7 @@
       "status": "maintained",
       "visibility": "public",
       "language": "Go",
-      "description": "vYtDL CLI — Go/TUI wrapper around yt-dlp with embed and auto-download（远程仓库已存在，本地暂未检出）"
+      "description": "vYtDL CLI — Go/TUI wrapper around yt-dlp with embed and auto-download"
     },
     {
       "name": "innate-feeds",
