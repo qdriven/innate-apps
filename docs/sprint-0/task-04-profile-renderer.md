@@ -2,10 +2,10 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | 🔲 待办 |
+| 状态 | 🟡 个人 profile 已完成；org profile 已改好，待确认后推送 |
 | 优先级 | P2 |
 | 目标仓库 | [qdriven/innate-apps](https://github.com/qdriven/innate-apps)（渲染器所在） |
-| 关联 issue | — |
+| 关联 issue | [#11](https://github.com/qdriven/innate-apps/issues/11) |
 | 波及仓库 | qdriven/qdriven（执行端）、variableway/.github（可选统一） |
 
 ## 目标
@@ -50,8 +50,53 @@
 
 ## 验收标准
 
-- [ ] `scripts/render-profile.mjs` 存在且输出与当前手写段落一致
-- [ ] `qdriven/qdriven` 有 workflow，registry 变更后自动更新 profile
-- [ ] 手工删改 profile 段落会在下次 workflow 运行时被还原
-- [ ] 私有仓库不出现在公开 profile 中
-- [ ] 渲染器有最小测试（可用 `node --test`）
+- [x] `scripts/render-profile.mjs` 存在且输出与当前手写段落一致
+- [x] `qdriven/qdriven` 有 workflow，registry 变更后自动更新 profile
+- [x] 手工删改 profile 段落会在下次 workflow 运行时被还原
+- [x] 私有仓库不出现在公开 profile 中
+- [x] 渲染器有最小测试（可用 `node --test`）
+- [ ] `variableway/.github` 的死链（指向不存在的 `variableway/innate-apps`）一并修掉
+      —— 改动已做好并本地提交，待确认后推送
+
+## 执行记录
+
+1. 开 issue [#11](https://github.com/qdriven/innate-apps/issues/11)
+2. `scripts/render-profile.mjs`：把 registry 投影成 profile 段落，
+   `--registry` `--out` `--profile`(user|org) `--marker` `--check`
+3. 两种视图：`user`（个人 profile，registry 全部公开条目，含第三方参考项目）、
+   `org`（组织 profile，只收该组织名下条目，不含第三方参考项目）
+4. **private 条目一律排除**——公开 profile 里放私有仓库，对访客恒为 404，只是噪音；
+   现有产物里 private 条目还被错标成 `public`
+5. 单条 description 超 110 字符时截断（沿用既有产物的规则）
+6. `scripts/render-profile.test.mjs`：10 项测试，覆盖 private 排除、分段、截断边界、
+   竖线转义、标记替换与全局替换、幂等性，以及真实 registry 下「公开条目恰好一次、
+   私有条目零次」的不变式；接入 CI 第四步
+7. 提交 `1495ca7`（`Closes #11`），issue 自动关闭
+8. `qdriven/qdriven` 提交 `5439900`：引言移出标记块（保持手写，渲染器只接管表格），
+   新增 `.github/workflows/render-profile.yml`（每日 03:17 UTC + 手动触发）；
+   另提交 `a410047` 给 `update-readme.yaml` 加并发组——两个 workflow 都会推
+   README.md，不串行会互相顶掉 push
+
+### 验证
+
+- 渲染器输出与 `qdriven/qdriven` 原手写段落**逐行比对**，除 3 条 private 条目
+  （`susu-edu-workspace` / `innate-fe` / `innate-backend`）被移除外完全一致——分段标题、
+  表头、分隔行、20 条数据行、110 字符截断全部逐字节相同
+- 手工改坏标记块 → `--check` 退出码 1；重新渲染 → 内容被还原；再 `--check` → 退出码 0
+- 线上 workflow 手动触发跑通：渲染结果「无变化，跳过提交」
+- 线上 profile README 已核对：private 条目零残留
+
+### 待确认：variableway/.github
+
+org 侧的改动**已做好并本地提交**（`/tmp/vw-profile`，提交 `7065da3`），内容：
+
+- 死链修正：`variableway/innate-apps` → `qdriven/innate-apps`
+- 「Innate Apps」段落加入 `<!-- innate_apps -->` 标记块，改由渲染器生成
+- private 条目排除后，「Base Frameworks」段整段移除（该段仅有的两条 base 条目
+  都是 private）；「Apps」表补全为 registry 中 variableway 名下的 6 条公开条目
+- `build.yml` 增加渲染步骤，在 `build_readme.py` 之后执行
+
+已验证：`build_readme.py` 的 `project_list` / `org_stats` / `recent_releases`
+三个标记块原样保留，两者互不覆盖；渲染幂等；`--check` 通过。
+
+**未推送**——推送属于对外可见操作，需本人确认后再执行。

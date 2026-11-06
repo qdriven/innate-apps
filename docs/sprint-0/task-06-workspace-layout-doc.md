@@ -2,10 +2,10 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | 🔲 待办 |
+| 状态 | ✅ 已完成（2026-11-06） |
 | 优先级 | P2 |
 | 目标仓库 | [qdriven/innate-apps](https://github.com/qdriven/innate-apps) |
-| 关联 issue | — |
+| 关联 issue | [#10](https://github.com/qdriven/innate-apps/issues/10) |
 
 ## 目标
 
@@ -49,8 +49,26 @@ schema 注释里，没有在 README 讲明白。这正是 task-02 判断
 
 ## 验收标准
 
-- [ ] `registry/README.md` 增加「工作区布局」小节，画出 `apps/` `tools/` `framework/`
+- [x] `registry/README.md` 增加「工作区布局」小节，画出 `apps/` `tools/` `framework/`
       `refine-factory/` `build-it-own/` `references/` 与 `innate-apps/` 的相对关系
-- [ ] 说明 `local_path` 的两种取值：有路径 = 本地已检出；`null` = 远程存在、本地未检出
-- [ ] 说明 `local_path` 缺失时哪些校验应视为通过（配合 task-05 的 `--skip-paths`）
-- [ ] 补充「仓库改名 / 下架」时的处理方式：更新 `repo` 字段并核对 `full_name`
+- [x] 说明 `local_path` 的两种取值：有路径 = 本地已检出；`null` = 远程存在、本地未检出
+- [x] 说明 `local_path` 缺失时哪些校验应视为通过（配合 task-05 的 `--skip-paths`）
+- [x] 补充「仓库改名 / 下架」时的处理方式：更新 `repo` 字段并核对 `full_name`
+
+## 执行记录
+
+1. 开 issue [#10](https://github.com/qdriven/innate-apps/issues/10)
+2. `registry/README.md` 新增「工作区布局」小节：画出 innate-apps 与
+   `apps/` `tools/` `framework/` `refine-factory/` `build-it-own/` `references/`
+   的相对关系，并逐条标注对应的 GitHub 仓库
+3. 说明 `local_path` 的两种取值，并写明 `null` 条目在路径校验里走跳过、属正常情况
+4. 写明路径校验与环境差异的关系：在旧平铺布局的机器上路径会几乎全红，那是**环境
+   问题不是数据问题**，明确不要靠改 `local_path` 让校验变绿
+5. 补充「仓库改名 / 下架 / 转 private / 停止维护」四种情况的处理方式
+6. 新增 `scripts/check-layout-doc.mjs`：把 README 的布局树反解出来，与 `apps.json`
+   逐条对拍，防止文档与数据源脱节；接入 CI 第三步
+7. 提交 `b051314`（`Closes #10`），issue 自动关闭
+
+> **验证**：布局树与 registry 的 20 条有路径条目全部对得上（另 1 条为 `null`）。
+> 以注入漂移（把 `innate-vytdl` 的 `local_path` 改成一个布局树里不存在的槽位）
+> 验证该检查确实会失败而非空转。

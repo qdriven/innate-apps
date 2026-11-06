@@ -9,10 +9,10 @@
 |---|------|----------------------|--------|------|-------|
 | 01 | 合并 spark-cli PR #31，验证文档站重建与 issue 自动关闭 | variableway/spark-cli | P0 | ✅ 已完成 | [#30](https://github.com/variableway/spark-cli/issues/30) |
 | 02 | 清理 innate-vytdl description 中的本地态注释 | qdriven/innate-apps | P0 | ✅ 已完成 | [#6](https://github.com/qdriven/innate-apps/issues/6) |
-| 03 | 未跟踪内容定去留：skills/ 入库、repos3.txt 归档、镜像产物忽略 | qdriven/innate-apps | P1 | 🔲 待办 | — |
-| 04 | qdriven/qdriven profile 段落改由 registry 自动渲染 | qdriven/innate-apps | P2 | 🔲 待办 | — |
-| 05 | innate-apps 接入 CI：validate-registry + `--skip-paths` | qdriven/innate-apps | P2 | 🔲 待办 | — |
-| 06 | registry/README.md 补预期工作区布局与 local_path 语义 | qdriven/innate-apps | P2 | 🔲 待办 | — |
+| 03 | 未跟踪内容定去留：skills/ 入库、repos3.txt 归档、镜像产物忽略 | qdriven/innate-apps | P1 | ✅ 已完成 | [#7](https://github.com/qdriven/innate-apps/issues/7) |
+| 04 | qdriven/qdriven profile 段落改由 registry 自动渲染 | qdriven/innate-apps | P2 | 🟡 org 侧待推送 | [#11](https://github.com/qdriven/innate-apps/issues/11) |
+| 05 | innate-apps 接入 CI：validate-registry + `--skip-paths` | qdriven/innate-apps | P2 | ✅ 已完成 | [#8](https://github.com/qdriven/innate-apps/issues/8) |
+| 06 | registry/README.md 补预期工作区布局与 local_path 语义 | qdriven/innate-apps | P2 | ✅ 已完成 | [#10](https://github.com/qdriven/innate-apps/issues/10) |
 
 任务详情见下方文件链接。
 
@@ -47,3 +47,30 @@ Sprint 0 的起点是 2026-11-06 对 `variableway/spark-cli` 的 issue #30（更
 - **策略未定**：仓库存在三类未跟踪内容，性质各异，入库与否没有成文约定（task-03）。
 - **结构性缺口**：registry 的三个渲染产物只有一个有生成器，每次改 registry 都要手工同步两处；
   仓库也没有 CI，陈旧条目可以无声无息地进入数据源（task-04 / task-05）。
+
+## 当前状态（2026-11-06）
+
+六个任务全部完成，只剩一处待本人确认：task-04 的 **org profile 侧**（`variableway/.github`）
+改动已做好并本地提交，未推送——推送属对外可见操作，需确认后再执行。
+
+按约定，六个任务分别开 issue、修复后关闭：
+
+| 任务 | Issue | 关闭方式 |
+|------|-------|----------|
+| 01 | [variableway/spark-cli#30](https://github.com/variableway/spark-cli/issues/30) | 合并 PR 后工作流自动关闭 |
+| 02 | [qdriven/innate-apps#6](https://github.com/qdriven/innate-apps/issues/6) | 提交信息含 `Closes #6` 自动关闭 |
+| 03 | [qdriven/innate-apps#7](https://github.com/qdriven/innate-apps/issues/7) | 同上 |
+| 04 | [qdriven/innate-apps#11](https://github.com/qdriven/innate-apps/issues/11) | 同上 |
+| 05 | [qdriven/innate-apps#8](https://github.com/qdriven/innate-apps/issues/8) | 同上 |
+| 06 | [qdriven/innate-apps#10](https://github.com/qdriven/innate-apps/issues/10) | 同上 |
+
+### 一并修掉的既有问题
+
+- `innate-wip` 已改名 `innate-daily` 后留下的重复条目与死链（task-02）
+- registry 校验从未进 CI（task-05）——现在 push / PR 会跑字段校验、远程状态校验、
+  布局文档一致性校验与渲染器测试四步
+- `qdriven/qdriven` 的 `innate_apps` 段落原本无生成器，靠手工同步（task-04）
+- `variableway/.github` 的 org profile 里指向不存在的 `variableway/innate-apps` 的死链，
+  以及把 private 仓库标成 public 的错标（task-04，待推送）
+- `qdriven/qdriven` 的 `Update README` workflow 因缺 `<!--START_SECTION:activity-->`
+  标记长期失败——**与本 sprint 无关**，尚未处理
