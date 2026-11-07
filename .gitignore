@@ -41,5 +41,15 @@
 # references/ 下默认忽略：独立 git 仓库 checkout 与网页抓取快照都不入库
 /references/*/
 
+# 工具与插件的产物目录，不纳入版本管理
+# .workbuddy/：本地工具的每日记忆日志（运行时产物）
+/.workbuddy/
+# plugins/：插件 checkout，含 node_modules 等依赖产物
+/plugins/
+
+# innate-music/ 的 data/ 是抓取下来的歌词正文——有版权，不入库。
+# 脚本与文档属于内容型文件，正常入库。
+/innate-music/data/
+
 # macOS
 .DS_Store
