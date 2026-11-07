@@ -86,6 +86,30 @@
 - 线上 workflow 手动触发跑通：渲染结果「无变化，跳过提交」
 - 线上 profile README 已核对：private 条目零残留
 
+### 后续补充（2026-11-07）
+
+**reference 类条目不上公开 profile**（提交 `656d9f2`）
+
+- AIHOT、khazix-skills、ai-aug-edu、word-atlas 是本地检出的**上游参考项目**，不是本人
+  维护的项目，列在公开 profile 上会误导 → 渲染器的 user 视图排除 `category=reference`
+- **数据源 `registry/apps.json` 一行未动**：这四条仍在 registry 里，继续记录本地
+  checkout 位置与用途；只是不渲染进 profile。测试里钉了这条不变量
+- 排除清单现在会说明原因（private / reference 类）
+- 渲染结果：21 条中排除 3 private + 4 reference，剩 14 条
+
+**顺带修好长期失败的 `Update README`**（提交 `c6b61b2`）
+
+- 该 workflow 从 2026-11-03 起每晚都红，原因是 `github-activity-readme` 找不到入口
+  标记 `<!--START_SECTION:activity-->`，直接退出。补上 START/END 标记 + 显式声明
+  `permissions: contents: write` 后，转为 success
+- 首次成功运行由 `github-actions[bot]` 提交 `:zap: Update README with the recent activity`，
+  自动写入 5 条真实活动（正是本 sprint 自己的 issue/PR 事件）
+
+**profile 仓库类型澄清**：`qdriven/qdriven` 是**个人 profile 仓库**——GitHub 上展示的
+profile 就是**仓库根目录的 README.md**；`profile/README.md` 是组织 profile 仓库
+（`variableway/.github`）的约定，两者不同。`render-profile.yml` 的检出目录已由
+`profile/` 改名为 `profile-repo/` 并加注释说明，避免混淆。
+
 ### 待确认：variableway/.github
 
 org 侧的改动**已做好并本地提交**（`/tmp/vw-profile`，提交 `7065da3`），内容：

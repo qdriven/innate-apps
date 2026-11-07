@@ -73,4 +73,5 @@ Sprint 0 的起点是 2026-11-06 对 `variableway/spark-cli` 的 issue #30（更
 - `variableway/.github` 的 org profile 里指向不存在的 `variableway/innate-apps` 的死链，
   以及把 private 仓库标成 public 的错标（task-04，待推送）
 - `qdriven/qdriven` 的 `Update README` workflow 因缺 `<!--START_SECTION:activity-->`
-  标记长期失败——**与本 sprint 无关**，尚未处理
+  标记长期失败（2026-11-03 起每晚都红）——已随 task-04 的后续补充修好，现为 success
+- 个人 profile 上不再列 reference 类第三方参考项目（数据源仍保留这些条目）
