@@ -27,26 +27,31 @@ export const MAX_DESC = 110;
 /**
  * 两种视图。
  *
- * - user：个人 profile。registry 里所有公开条目都列，包含第三方参考项目。
+ * - user：个人 profile。列 registry 里的公开条目，含第三方参考项目。
  * - org：组织 profile。只列该组织自己名下的条目，不含第三方参考项目。
  *
  * 两种视图都**排除 private 条目**——公开 profile 里放私有仓库，链接对访客恒为 404，
  * 只是噪音。
+ *
+ * **reference 类条目（第三方参考项目）不上公开 profile**：那些是本地检出的上游项目
+ * （AIHOT、khazix-skills、ai-aug-edu、word-atlas 等），是取材用的参考，不是本人维护的
+ * 项目。registry 里仍然保留它们，用来记录本地 checkout 位置。
  */
 export const PROFILES = {
   user: {
     owner: null,
+    excludeCategories: ["reference"],
     sections: [
       { title: "### Apps (maintained)", match: (e) => e.category === "app" && e.status === "maintained" },
       { title: "### Apps (experimental)", match: (e) => e.category === "app" && e.status === "experimental" },
       { title: "### Apps (archived)", match: (e) => e.category === "app" && e.status === "archived" },
       { title: "### Base Frameworks", match: (e) => e.category === "base" },
-      { title: "### Reference Projects", match: (e) => e.category === "reference" },
     ],
     headers: ["Project", "What it does", "Status"],
   },
   org: {
     owner: "variableway",
+    excludeCategories: ["reference"],
     sections: [
       { title: "### Apps", match: (e) => e.category === "app" },
       { title: "### Base Frameworks", match: (e) => e.category === "base" },
@@ -86,6 +91,10 @@ export function render(registry, profileKind = "user") {
   for (const entry of all) {
     if (entry.visibility !== "public") {
       excluded.push(`${entry.name}（private）`);
+      continue;
+    }
+    if (config.excludeCategories?.includes(entry.category)) {
+      excluded.push(`${entry.name}（${entry.category} 类，不上公开 profile）`);
       continue;
     }
     if (config.owner && !entry.repo.startsWith(`${config.owner}/`)) continue;

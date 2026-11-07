@@ -62,18 +62,37 @@ test("private 条目不进入渲染结果", () => {
   const { body, excluded, visible } = render(fixture, "user");
   assert.ok(!body.includes("secret"), "私有条目不该出现在正文里");
   assert.ok(!body.includes("acme/secret"));
-  assert.deepEqual(excluded, ["secret（private）"]);
-  assert.equal(visible.length, 3);
+  assert.ok(excluded.includes("secret（private）"));
+  assert.ok(!visible.some((e) => e.name === "secret"));
+  assert.ok(!visible.some((e) => e.name === "gamma"), "reference 类也不该进 profile");
 });
 
 test("user 视图按 category / status 分段", () => {
   const { body } = render(fixture, "user");
   assert.ok(body.includes("### Apps (maintained)"));
   assert.ok(body.includes("### Apps (experimental)"));
-  assert.ok(body.includes("### Reference Projects"));
   // base 段只剩私有条目，应整段省略
   assert.ok(!body.includes("### Base Frameworks"));
   assert.ok(body.indexOf("### Apps (maintained)") < body.indexOf("### Apps (experimental)"));
+});
+
+test("reference 类条目不上公开 profile，但数据源里仍然保留", () => {
+  const { body, excluded, visible } = render(fixture, "user");
+  assert.ok(!body.includes("### Reference Projects"));
+  assert.ok(!body.includes("gamma"), "第三方参考项目不该出现在 profile");
+  assert.ok(
+    excluded.some((x) => x.includes("gamma") && x.includes("reference")),
+    "排除清单应说明是 reference 类",
+  );
+  assert.ok(!visible.some((e) => e.name === "gamma"));
+
+  // 数据源本身不动：reference 条目仍在 registry 里
+  const registry = JSON.parse(fs.readFileSync(realRegistryPath, "utf8"));
+  const refs = registry.collections.filter((e) => e.category === "reference");
+  assert.ok(refs.length > 0, "registry 里应仍保留 reference 类条目");
+  for (const entry of refs) {
+    assert.ok(entry.repo && entry.description, `${entry.name} 的数据应完好`);
+  }
 });
 
 test("org 视图只收该组织名下、且不含第三方参考项目", () => {
@@ -126,25 +145,25 @@ test("渲染是幂等的——再渲染一次结果不变", () => {
   assert.equal(replaceBlock(content, block2), content);
 });
 
-test("真实 registry：每个公开条目恰好出现一次，私有条目零次", () => {
+test("真实 registry：每个公开条目恰好出现一次，private 与 reference 零次", () => {
   const registry = JSON.parse(fs.readFileSync(realRegistryPath, "utf8"));
   const { body } = render(registry, "user");
   for (const entry of registry.collections) {
     const count = body.split(`(${entry.url ?? `https://github.com/${entry.repo}`})`).length - 1;
-    if (entry.visibility === "public") {
+    if (entry.visibility === "public" && entry.category !== "reference") {
       assert.equal(count, 1, `${entry.name} 应恰好出现一次，实际 ${count}`);
     } else {
-      assert.equal(count, 0, `${entry.name} 是 private，不该出现`);
+      assert.equal(count, 0, `${entry.name} 不该出现在 profile`);
     }
   }
 });
 
-test("真实 registry：user 视图渲染结果与仓库里手写的段落除私有条目外一致", () => {
-  // 回归护栏：registry 的 description 一旦被改动，渲染结果会跟着变，
-  // 这里只校验结构，不校验文案。
+test("真实 registry：user 视图行数与「公开且非 reference」的条目数一致", () => {
   const registry = JSON.parse(fs.readFileSync(realRegistryPath, "utf8"));
   const { body } = render(registry, "user");
   const rows = body.split("\n").filter((l) => l.startsWith("| ["));
-  const publicCount = registry.collections.filter((e) => e.visibility === "public").length;
-  assert.equal(rows.length, publicCount);
+  const expected = registry.collections.filter(
+    (e) => e.visibility === "public" && e.category !== "reference",
+  ).length;
+  assert.equal(rows.length, expected);
 });
