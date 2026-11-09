@@ -22,6 +22,7 @@
 
 # 各 app 与工具项目：独立 git 仓库（registry/README.md 约定，非 submodule），
 # 仅作为本地 checkout，不作为本仓库内容追踪
+/agent-way/
 /innate-daily/
 /innate-fe-examples/
 /innate-feeds/
