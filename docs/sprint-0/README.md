@@ -10,7 +10,7 @@
 | 01 | 合并 spark-cli PR #31，验证文档站重建与 issue 自动关闭 | variableway/spark-cli | P0 | ✅ 已完成 | [#30](https://github.com/variableway/spark-cli/issues/30) |
 | 02 | 清理 innate-vytdl description 中的本地态注释 | qdriven/innate-apps | P0 | ✅ 已完成 | [#6](https://github.com/qdriven/innate-apps/issues/6) |
 | 03 | 未跟踪内容定去留：skills/ 入库、repos3.txt 归档、镜像产物忽略 | qdriven/innate-apps | P1 | ✅ 已完成 | [#7](https://github.com/qdriven/innate-apps/issues/7) |
-| 04 | qdriven/qdriven profile 段落改由 registry 自动渲染 | qdriven/innate-apps | P2 | 🟡 org 侧待推送 | [#11](https://github.com/qdriven/innate-apps/issues/11) |
+| 04 | qdriven/qdriven profile 段落改由 registry 自动渲染 | qdriven/innate-apps | P2 | ✅ 已完成 | [#11](https://github.com/qdriven/innate-apps/issues/11) |
 | 05 | innate-apps 接入 CI：validate-registry + `--skip-paths` | qdriven/innate-apps | P2 | ✅ 已完成 | [#8](https://github.com/qdriven/innate-apps/issues/8) |
 | 06 | registry/README.md 补预期工作区布局与 local_path 语义 | qdriven/innate-apps | P2 | ✅ 已完成 | [#10](https://github.com/qdriven/innate-apps/issues/10) |
 
@@ -48,10 +48,18 @@ Sprint 0 的起点是 2026-11-06 对 `variableway/spark-cli` 的 issue #30（更
 - **结构性缺口**：registry 的三个渲染产物只有一个有生成器，每次改 registry 都要手工同步两处；
   仓库也没有 CI，陈旧条目可以无声无息地进入数据源（task-04 / task-05）。
 
-## 当前状态（2026-11-06）
+## 当前状态（2026-11-09）
 
-六个任务全部完成，只剩一处待本人确认：task-04 的 **org profile 侧**（`variableway/.github`）
-改动已做好并本地提交，未推送——推送属对外可见操作，需确认后再执行。
+六个任务全部完成，三处渲染产物全部由 registry 驱动，不再需要手工同步：
+
+| 产物 | 生成机制 |
+|------|----------|
+| `qdriven/qdriven`（个人 profile，根 README.md） | `render-profile.mjs --profile user` + `render-profile.yml`（每日 03:17 UTC + 手动触发） |
+| `variableway/.github`（组织 profile，`profile/README.md`） | `build_readme.py` + `render-profile.mjs --profile org`，在 `build.yml` 里串行执行 |
+| `innate-apps` README | 手改（中文描述人工撰写） |
+
+私有仓库与第三方参考项目（reference 类）都不再出现在公开 profile 上；`registry/apps.json`
+仍是完整数据源，这些条目一条不少地留在里面。
 
 按约定，六个任务分别开 issue、修复后关闭：
 
@@ -71,7 +79,7 @@ Sprint 0 的起点是 2026-11-06 对 `variableway/spark-cli` 的 issue #30（更
   布局文档一致性校验与渲染器测试四步
 - `qdriven/qdriven` 的 `innate_apps` 段落原本无生成器，靠手工同步（task-04）
 - `variableway/.github` 的 org profile 里指向不存在的 `variableway/innate-apps` 的死链，
-  以及把 private 仓库标成 public 的错标（task-04，待推送）
+  以及把 private 仓库标成 public 的错标（task-04）
 - `qdriven/qdriven` 的 `Update README` workflow 因缺 `<!--START_SECTION:activity-->`
   标记长期失败（2026-11-03 起每晚都红）——已随 task-04 的后续补充修好，现为 success
 - 个人 profile 上不再列 reference 类第三方参考项目（数据源仍保留这些条目）

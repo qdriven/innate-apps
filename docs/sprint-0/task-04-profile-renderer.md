@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | 🟡 个人 profile 已完成；org profile 已改好，待确认后推送 |
+| 状态 | ✅ 已完成（2026-11-06，2026-11-09 收尾） |
 | 优先级 | P2 |
 | 目标仓库 | [qdriven/innate-apps](https://github.com/qdriven/innate-apps)（渲染器所在） |
 | 关联 issue | [#11](https://github.com/qdriven/innate-apps/issues/11) |
@@ -55,8 +55,7 @@
 - [x] 手工删改 profile 段落会在下次 workflow 运行时被还原
 - [x] 私有仓库不出现在公开 profile 中
 - [x] 渲染器有最小测试（可用 `node --test`）
-- [ ] `variableway/.github` 的死链（指向不存在的 `variableway/innate-apps`）一并修掉
-      —— 改动已做好并本地提交，待确认后推送
+- [x] `variableway/.github` 的死链（指向不存在的 `variableway/innate-apps`）一并修掉
 
 ## 执行记录
 
@@ -110,7 +109,7 @@ profile 就是**仓库根目录的 README.md**；`profile/README.md` 是组织 p
 （`variableway/.github`）的约定，两者不同。`render-profile.yml` 的检出目录已由
 `profile/` 改名为 `profile-repo/` 并加注释说明，避免混淆。
 
-### 待确认：variableway/.github
+### variableway/.github（2026-11-09 已推送）
 
 org 侧的改动**已做好并本地提交**（`/tmp/vw-profile`，提交 `7065da3`），内容：
 
@@ -123,4 +122,8 @@ org 侧的改动**已做好并本地提交**（`/tmp/vw-profile`，提交 `7065d
 已验证：`build_readme.py` 的 `project_list` / `org_stats` / `recent_releases`
 三个标记块原样保留，两者互不覆盖；渲染幂等；`--check` 通过。
 
-**未推送**——推送属于对外可见操作，需本人确认后再执行。
+**2026-11-09 收尾**：夜间 cron 已把远端推进到 `ed67630`，本地提交先 `rebase` 到最新
+远端再推送（`d79cef6`），无冲突。push 触发的 `build.yml` 成功，bot 的后续提交
+`a0c9a11` 只更新了 `org_stats` 的时间戳——`innate_apps` 块未被改动，证明两个生成器
+长期共存正常。线上 org profile 页面实测：死链已修、Apps 表 6 条、private 条目与
+Base Frameworks 段均已消失。
